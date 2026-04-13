@@ -980,4 +980,71 @@ ${detailPanel}
 </html>`;
 }
 
-module.exports = { readJourneyFiles, parseJourney, buildPageHTML };
+// ---------------------------------------------------------------------------
+// PART 3: File writer and CLI runner
+// ---------------------------------------------------------------------------
+
+function ensureDir(dir) {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function writeJourney(journey) {
+  ensureDir(OUTPUT_DIR);
+  const outFile = path.join(OUTPUT_DIR, `${journey.slug}.html`);
+  const html = buildPageHTML(journey);
+  fs.writeFileSync(outFile, html, 'utf8');
+  return outFile;
+}
+
+function run() {
+  console.log('BetOnline Journey Map Generator');
+  console.log('================================\n');
+
+  // Optional: filter to a single slug via CLI arg  e.g. node generate.js prematch
+  const targetSlug = process.argv[2] || null;
+
+  const files = readJourneyFiles();
+  const filtered = targetSlug
+    ? files.filter(f => f.slug === targetSlug)
+    : files;
+
+  if (filtered.length === 0) {
+    console.error(`No journey found with slug "${targetSlug}". Available: ${files.map(f => f.slug).join(', ')}`);
+    process.exit(1);
+  }
+
+  const results = [];
+  for (const file of filtered) {
+    process.stdout.write(`Parsing  ${file.filename} ... `);
+    let journey;
+    try {
+      journey = parseJourney(file.slug, file.raw);
+      console.log(`OK  (${journey.steps.length} steps, ${journey.phases.length} phases)`);
+    } catch (err) {
+      console.error(`FAILED\n  ${err.message}`);
+      process.exit(1);
+    }
+
+    process.stdout.write(`Building ${journey.slug}.html ... `);
+    let outFile;
+    try {
+      outFile = writeJourney(journey);
+      const size = (fs.statSync(outFile).size / 1024).toFixed(1);
+      console.log(`OK  → ${path.relative(process.cwd(), outFile)}  (${size} KB)`);
+      results.push({ slug: journey.slug, file: outFile });
+    } catch (err) {
+      console.error(`FAILED\n  ${err.message}`);
+      process.exit(1);
+    }
+  }
+
+  console.log(`\n✓ Generated ${results.length} file${results.length !== 1 ? 's' : ''}:`);
+  results.forEach(r => console.log(`  output/${r.slug}.html`));
+  console.log('\nOpen any file directly in your browser — no server needed.');
+}
+
+if (require.main === module) {
+  run();
+}
+
+module.exports = { readJourneyFiles, parseJourney, buildPageHTML, writeJourney, run };
