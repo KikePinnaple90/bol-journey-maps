@@ -51,10 +51,10 @@ function parseBulletField(lines, key) {
   const items = [];
   for (let i = startIdx + 1; i < lines.length; i++) {
     const l = lines[i];
-    // Stop at next field definition
-    if (/^\s*- \w/.test(l) && l.includes(':')) break;
-    // Collect bullet items
-    if (/^\s*- /.test(l)) items.push(l.replace(/^\s*-\s+/, '').trim());
+    // Stop only at top-level (non-indented) field definitions like "- key: value"
+    if (/^- \w[^:]*:/.test(l)) break;
+    // Collect indented bullet items "  - item"
+    if (/^\s+- /.test(l)) items.push(l.replace(/^\s*-\s+/, '').trim());
   }
   return items;
 }
