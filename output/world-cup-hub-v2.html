@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journey Map v2 — Bet on World Cup via the League Hub</title>
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --pain-bg: #fff1f2;
+  --pain-border: #fca5a5;
+  --pain-text: #991b1b;
+  --opp-bg: #f0fdf4;
+  --opp-border: #86efac;
+  --opp-text: #166534;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1), 0 16px 40px rgba(0,0,0,0.08);
+}
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.header-info { flex: 1; min-width: 200px; }
+.header-info h1 { font-size: 18px; font-weight: 700; }
+.header-info p  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.header-actions { display: flex; gap: 8px; }
+.btn {
+  padding: 6px 14px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn:hover { background: #f1f5f9; }
+.btn.active { background: #0f172a; color: white; border-color: #0f172a; }
+.btn-primary {
+  padding: 6px 14px; border-radius: 6px; border: none;
+  background: #0ea5e9; color: white; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: background 0.15s;
+}
+.btn-primary:hover { background: #0284c7; }
+
+/* ── Phase section ────────────────────────────────────── */
+.phase-section { padding: 28px 28px 8px; }
+.phase-header {
+  display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.phase-label { display: flex; align-items: center; gap: 10px; }
+.phase-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.phase-name { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
+.phase-question { font-size: 13px; color: var(--text-secondary); font-style: italic; }
+
+/* ── Card row ─────────────────────────────────────────── */
+.cards-row {
+  display: flex; gap: 16px; overflow-x: auto;
+  padding-bottom: 20px; align-items: flex-start;
+}
+.cards-row::-webkit-scrollbar { height: 5px; }
+.cards-row::-webkit-scrollbar-track { background: transparent; }
+.cards-row::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+/* Arrow connector between cards */
+.card-arrow {
+  display: flex; align-items: flex-start;
+  padding-top: 30px; flex-shrink: 0; color: #cbd5e1;
+}
+
+/* ── Branch group ─────────────────────────────────────── */
+.branch-group { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+
+/* ── Step card ────────────────────────────────────────── */
+.step-card {
+  width: 300px; flex-shrink: 0;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 1.5px solid transparent;
+  display: flex; flex-direction: column;
+}
+.step-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.step-card.selected { border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
+.branch-card { width: 280px; }
+
+/* ── Card accent strip ───────────────────────────────── */
+.card-accent { height: 4px; }
+
+/* ── Card header ─────────────────────────────────────── */
+.card-header { padding: 14px 16px 10px; }
+.card-step-num {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 4px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.branch-badge {
+  font-size: 9px; font-weight: 700; padding: 2px 6px;
+  border-radius: 4px; background: #f1f5f9; color: #64748b;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.card-title {
+  font-size: 15px; font-weight: 700; line-height: 1.3;
+  margin-bottom: 8px; color: var(--text-primary);
+}
+.card-meta { display: flex; flex-wrap: wrap; gap: 5px; }
+.meta-badge {
+  font-size: 11px; color: var(--text-secondary);
+  background: #f8fafc; border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 7px;
+}
+
+/* ── Screenshot ──────────────────────────────────────── */
+.card-screenshot {
+  width: 100%; height: 130px; overflow: hidden;
+  background: #f8fafc; position: relative;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.card-screenshot img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  transition: transform 0.2s;
+}
+.card-screenshot:hover img { transform: scale(1.04); }
+.ss-count {
+  position: absolute; bottom: 6px; right: 8px;
+  background: rgba(0,0,0,0.55); color: white;
+  font-size: 10px; font-weight: 600;
+  padding: 1px 6px; border-radius: 10px;
+}
+.ss-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: #cbd5e1; font-size: 11px; font-style: italic;
+}
+
+/* ── Emotion quote ────────────────────────────────────── */
+.card-emotion {
+  padding: 10px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex; gap: 6px; align-items: flex-start;
+}
+.emotion-mark {
+  font-size: 22px; line-height: 1; color: #cbd5e1;
+  flex-shrink: 0; margin-top: -2px; font-family: Georgia, serif;
+}
+.emotion-text {
+  font-size: 12px; color: var(--text-secondary);
+  font-style: italic; line-height: 1.45;
+}
+
+/* ── Pain / Opp sections ─────────────────────────────── */
+.card-section { padding: 10px 16px; border-bottom: 1px solid #f1f5f9; }
+.section-head { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; }
+.section-icon {
+  width: 16px; height: 16px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 900; flex-shrink: 0;
+}
+.section-title {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.section-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.section-list li {
+  font-size: 12px; line-height: 1.4;
+  padding: 4px 8px; border-radius: 5px;
+  display: flex; gap: 6px; align-items: flex-start;
+}
+.section-list li::before {
+  content: ''; width: 4px; height: 4px; border-radius: 50%;
+  margin-top: 6px; flex-shrink: 0;
+}
+.more-hint { font-size: 11px !important; font-style: italic; opacity: 0.7; }
+
+.section-pain .section-icon { background: var(--pain-bg); color: var(--pain-text); }
+.section-pain .section-title { color: var(--pain-text); }
+.section-pain .section-list li { background: var(--pain-bg); color: #7f1d1d; }
+.section-pain .section-list li::before { background: var(--pain-text); }
+
+.section-opp .section-icon { background: var(--opp-bg); color: var(--opp-text); }
+.section-opp .section-title { color: var(--opp-text); }
+.section-opp .section-list li { background: var(--opp-bg); color: #14532d; }
+.section-opp .section-list li::before { background: var(--opp-text); }
+
+/* ── Card footer ─────────────────────────────────────── */
+.card-footer {
+  padding: 10px 16px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; background: #fafbfc; margin-top: auto;
+}
+.drives-row { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; }
+.drive-chip {
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  border-radius: 4px; border: 1px solid;
+}
+.detail-btn {
+  font-size: 11px; font-weight: 600; color: #0ea5e9;
+  background: none; border: none; cursor: pointer;
+  white-space: nowrap; padding: 2px 0; flex-shrink: 0;
+}
+.detail-btn:hover { color: #0284c7; text-decoration: underline; }
+
+/* ── Detail panel ─────────────────────────────────────── */
+#detail-panel {
+  position: fixed; top: 0; right: -460px;
+  width: 440px; height: 100vh;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.1);
+  transition: right 0.25s cubic-bezier(0.16,1,0.3,1);
+  z-index: 200; overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+#detail-panel.open { right: 0; }
+
+.panel-topbar {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px;
+  position: sticky; top: 0;
+  background: var(--surface); z-index: 1;
+}
+.panel-topbar-left { display: flex; flex-direction: column; gap: 4px; }
+.panel-step-num { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.panel-step-name { font-size: 17px; font-weight: 700; line-height: 1.3; }
+.panel-close {
+  background: none; border: 1px solid var(--border); border-radius: 6px;
+  width: 30px; height: 30px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; color: var(--text-muted);
+  font-size: 14px; flex-shrink: 0;
+}
+.panel-close:hover { background: #f1f5f9; color: var(--text-primary); }
+
+.panel-body { padding: 20px 24px 48px; display: flex; flex-direction: column; gap: 18px; }
+
+.panel-screenshots { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.panel-ss {
+  flex-shrink: 0; max-height: 200px; width: auto;
+  border-radius: 8px; border: 1px solid var(--border);
+  cursor: zoom-in; transition: transform 0.15s;
+}
+.panel-ss:hover { transform: scale(1.02); }
+.panel-ss-missing {
+  flex-shrink: 0; height: 60px; min-width: 100px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; border: 1px dashed #cbd5e1;
+  font-size: 10px; color: #94a3b8; text-align: center; padding: 8px;
+}
+
+.panel-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.panel-block {
+  background: #f8fafc; border-radius: 8px; padding: 12px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.panel-block-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+.panel-block-text { font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
+
+.panel-section { display: flex; flex-direction: column; gap: 6px; }
+.panel-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+.panel-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+.panel-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.panel-list li {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 6px 10px; border-radius: 6px; border-left: 3px solid transparent;
+  background: #f8fafc;
+}
+.panel-list.ideas  li { background: #f5f3ff; border-color: #c4b5fd; color: #5b21b6; }
+.panel-list.actions li { background: #f0f9ff; border-color: #7dd3fc; color: #0369a1; }
+.panel-list.data   li { border-color: var(--border); }
+
+.panel-drives { display: flex; flex-direction: column; gap: 6px; }
+.drive-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 8px; font-size: 12px;
+}
+.pdc-code { font-weight: 800; flex-shrink: 0; min-width: 34px; }
+.pdc-name { color: var(--text-secondary); flex: 1; }
+.pdc-reason { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.hat-badge { font-size: 10px; padding: 1px 6px; border-radius: 4px; flex-shrink: 0; }
+.hat-white { background: #dcfce7; color: #166534; }
+.hat-black { background: #fee2e2; color: #991b1b; }
+
+/* ── Table view ────────────────────────────────────────── */
+#view-table { padding: 20px 28px; }
+.table-scroll { overflow-x: auto; }
+.journey-table {
+  border-collapse: collapse; width: 100%;
+  background: var(--surface); border-radius: var(--radius);
+  overflow: hidden; border: 1px solid var(--border); min-width: 800px;
+}
+.journey-table th, .journey-table td {
+  border: 1px solid var(--border); padding: 10px 12px;
+  vertical-align: top; font-size: 12px;
+}
+.journey-table thead th { background: #f8fafc; font-weight: 600; text-align: left; }
+.row-label { background: #f8fafc !important; font-weight: 600; font-size: 11px; color: var(--text-secondary); white-space: nowrap; width: 130px; }
+.corner { background: var(--surface) !important; }
+.th-step-name { display: block; font-size: 12px; font-weight: 600; }
+.th-phase { display: block; font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.cell-empty { color: #cbd5e1; font-size: 11px; }
+.journey-table td ul { padding-left: 14px; }
+.journey-table td li { margin-bottom: 2px; }
+
+/* ── Lightbox ─────────────────────────────────────────── */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85); z-index: 1000;
+  align-items: center; justify-content: center; cursor: zoom-out;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-height: 90vh; max-width: 92vw; border-radius: 8px; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+
+.no-data { font-size: 11px; color: #cbd5e1; font-style: italic; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-info">
+    <h1>Bet on World Cup via the League Hub</h1>
+    <p>BetOnline Sportsbook &nbsp;·&nbsp; Updated 2026-04-14</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn active" id="btn-cards">Cards</button>
+    <button class="btn" id="btn-table">Table</button>
+    <button class="btn-primary" id="btn-export">&#x2B07; Export MD</button>
+  </div>
+</header>
+
+<div id="view-cards">
+<section class="phase-section">
+  <div class="phase-header">
+    <div class="phase-label">
+      <div class="phase-dot" style="background:#6366f1"></div>
+      <span class="phase-name" style="color:#6366f1">Discovery</span>
+    </div>
+    <span class="phase-question">How does a punter find and arrive at all World Cup betting content without navigating through deep hierarchical menus?</span>
+  </div>
+  <div class="cards-row">
+<div class="step-card" data-idx="0">
+  <div class="card-accent" style="background:#22c55e"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 1
+      
+    </div>
+    <div class="card-title">Access Hub via Quick Link</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)</span>
+      <span class="meta-badge">&#x1F4CD; Quick Links navigation — left nav (desktop) / mobile top nav</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Confident and purposeful — World Cup is immediately visible, no hunting required</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>Quick Link is feature-flagged — will not appear when flag is disabled post-tournament</li><li>Mobile users may need to open nav menu before Quick Link is visible</li><li>Quick Link position (3rd recommended) may vary by brand configuration</li>
+          
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (2)</div>
+        </div>
+        <ul class="section-list">
+          <li>Feature flag enables clean activation and deactivation without code changes</li><li>Quick Link with live game count badge during tournament (&quot;3 LIVE&quot;) drives urgency</li>
+          
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span><span class="drive-chip"
+      style="background:#06b6d420;border-color:#06b6d4;color:#06b6d4"
+      title="Unpredictability &amp; Curiosity">CD7</span></div>
+    <button class="detail-btn" data-idx="0">Full detail &#x2192;</button>
+  </div>
+</div></div>
+</section>
+<section class="phase-section">
+  <div class="phase-header">
+    <div class="phase-label">
+      <div class="phase-dot" style="background:#0ea5e9"></div>
+      <span class="phase-name" style="color:#0ea5e9">Exploration</span>
+    </div>
+    <span class="phase-question">Once inside the hub, how does a punter orient themselves and find the content they want to bet on?</span>
+  </div>
+  <div class="cards-row">
+<div class="step-card" data-idx="1">
+  <div class="card-accent" style="background:#22c55e"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 2
+      
+    </div>
+    <div class="card-title">Land on World Cup Hub</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)</span>
+      <span class="meta-badge">&#x1F4CD; World Cup Hub page (/sportsbook/world-cup-hub/)</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Impressed and oriented — everything World Cup in one place, clear structure, no confusion</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>Nice-to-have tabs (SGPs, Boosters) may be disabled if no content is available — can appear inconsistent</li><li>First-time users may not immediately understand the value of the Futures tab</li><li>Smart default tab logic (Games vs Futures depending on content availability) must handle edge cases</li>
+          
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (2)</div>
+        </div>
+        <ul class="section-list">
+          <li>Sticky tabs during scroll keep navigation accessible throughout long content lists</li><li>Smart default (Games if fixtures, Futures if pre-tournament) prevents empty state confusion</li>
+          
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span><span class="drive-chip"
+      style="background:#14b8a620;border-color:#14b8a6;color:#14b8a6"
+      title="Ownership &amp; Possession">CD4</span><span class="drive-chip"
+      style="background:#06b6d420;border-color:#06b6d4;color:#06b6d4"
+      title="Unpredictability &amp; Curiosity">CD7</span></div>
+    <button class="detail-btn" data-idx="1">Full detail &#x2192;</button>
+  </div>
+</div><div class="card-arrow">
+    <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+      <path d="M0 10 H18 M13 5 L20 10 L13 15" stroke="#cbd5e1"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+<div class="step-card" data-idx="2">
+  <div class="card-accent" style="background:#22c55e"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 3
+      <span class="branch-badge">games</span>
+    </div>
+    <div class="card-title">Browse Games Section</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist), Maria (Soccer-First Bettor)</span>
+      <span class="meta-badge">&#x1F4CD; World Cup Hub — Games tab</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Engaged and efficient — clean list, no duplicate confusion, live matches immediately visible</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>Dense fixture list during group stage (48 matches) may require extensive scrolling without round filters</li><li>Alternative market labels (e.g., &quot;Spread 1.5&quot;, &quot;Total 2.5&quot;) may confuse casual bettors</li><li>Odds suspension during live events temporarily blocks selections — users see grey buttons with no clear explanation</li>
+          
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (2)</div>
+        </div>
+        <ul class="section-list">
+          <li>Group stage round filter (&quot;Round 1&quot;, &quot;Round of 16&quot;) reduces scrolling in dense fixture lists</li><li>Tooltip or label on alternative market columns for casual bettor comprehension</li>
+          
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span><span class="drive-chip"
+      style="background:#a855f720;border-color:#a855f7;color:#a855f7"
+      title="Empowerment of Creativity">CD3</span><span class="drive-chip"
+      style="background:#14b8a620;border-color:#14b8a6;color:#14b8a6"
+      title="Ownership &amp; Possession">CD4</span><span class="drive-chip"
+      style="background:#f9731620;border-color:#f97316;color:#f97316"
+      title="Scarcity &amp; Impatience">CD6</span></div>
+    <button class="detail-btn" data-idx="2">Full detail &#x2192;</button>
+  </div>
+</div><div class="card-arrow">
+    <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+      <path d="M0 10 H18 M13 5 L20 10 L13 15" stroke="#cbd5e1"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+<div class="step-card" data-idx="3">
+  <div class="card-accent" style="background:#14b8a6"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 4
+      <span class="branch-badge">futures</span>
+    </div>
+    <div class="card-title">Browse Futures Section</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist — tournament winner bet), Maria (Soccer-First Bettor — top scorer, group winners)</span>
+      <span class="meta-badge">&#x1F4CD; World Cup Hub — Futures tab</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Exploratory and strategic — feels like a dedicated futures destination, not a buried afterthought</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>Tournament Winner market with 32 teams is long even with Show More</li><li>Futures cannot be combined with fixture lines in parlays — may surprise users who try</li><li>Market info icon (must play for action rules) is easy to miss for casual bettors</li>
+          
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (2)</div>
+        </div>
+        <ul class="section-list">
+          <li>Group filter chips enable instant navigation to preferred futures category</li><li>Deep-link URL (?group=tournament-winner) enables sharing specific markets via social or email</li>
+          
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#14b8a620;border-color:#14b8a6;color:#14b8a6"
+      title="Ownership &amp; Possession">CD4</span><span class="drive-chip"
+      style="background:#06b6d420;border-color:#06b6d4;color:#06b6d4"
+      title="Unpredictability &amp; Curiosity">CD7</span><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span><span class="drive-chip"
+      style="background:#ef444420;border-color:#ef4444;color:#ef4444"
+      title="Loss &amp; Avoidance">CD8</span></div>
+    <button class="detail-btn" data-idx="3">Full detail &#x2192;</button>
+  </div>
+</div></div>
+</section>
+<section class="phase-section">
+  <div class="phase-header">
+    <div class="phase-label">
+      <div class="phase-dot" style="background:#10b981"></div>
+      <span class="phase-name" style="color:#10b981">Bet Placement &amp; Live Engagement</span>
+    </div>
+    <span class="phase-question">How does a punter move from browsing to placing a bet, and stay engaged when a match goes live?</span>
+  </div>
+  <div class="cards-row">
+<div class="step-card" data-idx="4">
+  <div class="card-accent" style="background:#a855f7"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 5
+      
+    </div>
+    <div class="card-title">View Fixture Page</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist), Maria (Soccer-First Bettor)</span>
+      <span class="meta-badge">&#x1F4CD; Fixture Specific Page — upcoming or live (/sportsbook/.../fixture/ID)</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Focused and in control — full market depth available, clear breadcrumb back to hub, SGP easily accessible</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>Dense market list on mobile requires extensive scrolling; no jump-to-section nav</li><li>SGP available only for upcoming fixtures — live fixture Parlay Builder tab not supported in initial release</li><li>Second half markets (half-time feature) are nice-to-have and not guaranteed in first release</li>
+          
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (2)</div>
+        </div>
+        <ul class="section-list">
+          <li>Breadcrumb routing to World Cup Hub (vs generic league page) keeps user in hub funnel</li><li>Parlay Builder tab placement makes SGP discoverable without requiring SGP icon knowledge</li>
+          
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#a855f720;border-color:#a855f7;color:#a855f7"
+      title="Empowerment of Creativity">CD3</span><span class="drive-chip"
+      style="background:#14b8a620;border-color:#14b8a6;color:#14b8a6"
+      title="Ownership &amp; Possession">CD4</span><span class="drive-chip"
+      style="background:#f9731620;border-color:#f97316;color:#f97316"
+      title="Scarcity &amp; Impatience">CD6</span><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span></div>
+    <button class="detail-btn" data-idx="4">Full detail &#x2192;</button>
+  </div>
+</div><div class="card-arrow">
+    <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+      <path d="M0 10 H18 M13 5 L20 10 L13 15" stroke="#cbd5e1"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+<div class="step-card" data-idx="5">
+  <div class="card-accent" style="background:#f97316"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 6
+      
+    </div>
+    <div class="card-title">Live Transition — Upcoming to Live</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist), Maria (Soccer-First Bettor)</span>
+      <span class="meta-badge">&#x1F4CD; Fixture Specific Page — automatic redirect from upcoming to live</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Seamlessly engaged — zero friction, arrives on live page with betslip intact and ready to bet immediately</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>If live fixture ID mapping is unavailable, fallback message routes user to hub Games section — 1-2 extra clicks</li><li>Pre-match betslip selections placed after wager cutoff will fail — user needs clear error message</li><li>5-second detection window means brief delay between real kickoff and notification appearance</li>
+          
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (2)</div>
+        </div>
+        <ul class="section-list">
+          <li>upcoming_live_redirection tracking event enables direct OKR measurement (KR3.1)</li><li>&quot;About to start&quot; pre-warning at 5 minutes to kickoff reduces surprise when redirect fires</li>
+          
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#f9731620;border-color:#f97316;color:#f97316"
+      title="Scarcity &amp; Impatience">CD6</span><span class="drive-chip"
+      style="background:#06b6d420;border-color:#06b6d4;color:#06b6d4"
+      title="Unpredictability &amp; Curiosity">CD7</span><span class="drive-chip"
+      style="background:#ef444420;border-color:#ef4444;color:#ef4444"
+      title="Loss &amp; Avoidance">CD8</span><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span></div>
+    <button class="detail-btn" data-idx="5">Full detail &#x2192;</button>
+  </div>
+</div><div class="card-arrow">
+    <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+      <path d="M0 10 H18 M13 5 L20 10 L13 15" stroke="#cbd5e1"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+<div class="step-card" data-idx="6">
+  <div class="card-accent" style="background:#06b6d4"></div>
+  <div class="card-header">
+    <div class="card-step-num">
+      Step 7
+      
+    </div>
+    <div class="card-title">Place Bet via Betslip</div>
+    <div class="card-meta">
+      <span class="meta-badge">&#x1F464; Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)</span>
+      <span class="meta-badge">&#x1F4CD; Betslip — persistent component across all hub pages and fixture pages</span>
+    </div>
+  </div>
+  <div class="card-screenshot">
+      <div class="ss-placeholder">Screenshot not found</div>
+      
+    </div>
+  <div class="card-emotion">
+        <span class="emotion-mark">&ldquo;</span>
+        <span class="emotion-text">Excited and decisive — clear payout display, intuitive stake entry, and fast confirmation</span>
+      </div>
+  <div class="card-section section-pain">
+        <div class="section-head">
+          <div class="section-icon">!</div>
+          <div class="section-title">Pain Points (4)</div>
+        </div>
+        <ul class="section-list">
+          <li>Odds changes between selection and placement cause rejection — users must re-accept new odds</li><li>Mobile keyboard obscures betslip stake input on small screens</li><li>Futures cannot be combined with fixture selections in parlays — users who try receive unhelpful error</li>
+          <li class="more-hint">+1 more — see full detail</li>
+        </ul>
+      </div>
+  <div class="card-section section-opp">
+        <div class="section-head">
+          <div class="section-icon">&#x2726;</div>
+          <div class="section-title">Opportunities (3)</div>
+        </div>
+        <ul class="section-list">
+          <li>Real-time odds change indicator in betslip before placement reduces surprise rejections</li><li>Quick-stake buttons ($10/$25/$50/$100) eliminate mobile keyboard friction</li>
+          <li class="more-hint">+1 more — see full detail</li>
+        </ul>
+      </div>
+  <div class="card-footer">
+    <div class="drives-row"><span class="drive-chip"
+      style="background:#06b6d420;border-color:#06b6d4;color:#06b6d4"
+      title="Unpredictability &amp; Curiosity">CD7</span><span class="drive-chip"
+      style="background:#14b8a620;border-color:#14b8a6;color:#14b8a6"
+      title="Ownership &amp; Possession">CD4</span><span class="drive-chip"
+      style="background:#f9731620;border-color:#f97316;color:#f97316"
+      title="Scarcity &amp; Impatience">CD6</span><span class="drive-chip"
+      style="background:#ef444420;border-color:#ef4444;color:#ef4444"
+      title="Loss &amp; Avoidance">CD8</span><span class="drive-chip"
+      style="background:#22c55e20;border-color:#22c55e;color:#22c55e"
+      title="Development &amp; Accomplishment">CD2</span></div>
+    <button class="detail-btn" data-idx="6">Full detail &#x2192;</button>
+  </div>
+</div></div>
+</section></div>
+
+
+<div id="view-table" class="view" hidden>
+  <div class="table-scroll">
+    <table class="journey-table">
+      <thead><tr><th class="row-label corner"></th><th style="border-bottom:3px solid #22c55e;min-width:160px">
+      <span class="th-step-name">Access Hub via Quick Link</span>
+      <span class="th-phase">Discovery</span>
+    </th><th style="border-bottom:3px solid #22c55e;min-width:160px">
+      <span class="th-step-name">Land on World Cup Hub</span>
+      <span class="th-phase">Exploration</span>
+    </th><th style="border-bottom:3px solid #22c55e;min-width:160px">
+      <span class="th-step-name">Browse Games Section</span>
+      <span class="th-phase">Exploration</span>
+    </th><th style="border-bottom:3px solid #14b8a6;min-width:160px">
+      <span class="th-step-name">Browse Futures Section</span>
+      <span class="th-phase">Exploration</span>
+    </th><th style="border-bottom:3px solid #a855f7;min-width:160px">
+      <span class="th-step-name">View Fixture Page</span>
+      <span class="th-phase">Bet Placement &amp; Live Engagement</span>
+    </th><th style="border-bottom:3px solid #f97316;min-width:160px">
+      <span class="th-step-name">Live Transition — Upcoming to Live</span>
+      <span class="th-phase">Bet Placement &amp; Live Engagement</span>
+    </th><th style="border-bottom:3px solid #06b6d4;min-width:160px">
+      <span class="th-step-name">Place Bet via Betslip</span>
+      <span class="th-phase">Bet Placement &amp; Live Engagement</span>
+    </th></tr></thead>
+      <tbody><tr><th class="row-label">Persona</th><td>Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)</td><td>Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)</td><td>Alex (World Cup Opportunist), Maria (Soccer-First Bettor)</td><td>Alex (World Cup Opportunist — tournament winner bet), Maria (Soccer-First Bettor — top scorer, group winners)</td><td>Alex (World Cup Opportunist), Maria (Soccer-First Bettor)</td><td>Alex (World Cup Opportunist), Maria (Soccer-First Bettor)</td><td>Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)</td></tr><tr><th class="row-label">Touchpoint</th><td>Quick Links navigation — left nav (desktop) / mobile top nav</td><td>World Cup Hub page (/sportsbook/world-cup-hub/)</td><td>World Cup Hub — Games tab</td><td>World Cup Hub — Futures tab</td><td>Fixture Specific Page — upcoming or live (/sportsbook/.../fixture/ID)</td><td>Fixture Specific Page — automatic redirect from upcoming to live</td><td>Betslip — persistent component across all hub pages and fixture pages</td></tr><tr><th class="row-label">Emotions</th><td>Confident and purposeful — World Cup is immediately visible, no hunting required</td><td>Impressed and oriented — everything World Cup in one place, clear structure, no confusion</td><td>Engaged and efficient — clean list, no duplicate confusion, live matches immediately visible</td><td>Exploratory and strategic — feels like a dedicated futures destination, not a buried afterthought</td><td>Focused and in control — full market depth available, clear breadcrumb back to hub, SGP easily accessible</td><td>Seamlessly engaged — zero friction, arrives on live page with betslip intact and ready to bet immediately</td><td>Excited and decisive — clear payout display, intuitive stake entry, and fast confirmation</td></tr><tr><th class="row-label">Player Action</th><td>User spots the trophy icon Quick Link in the left nav and clicks it</td><td>User scans the hub, reads tab labels, and decides whether to browse Games or Futures first</td><td>User scans the fixture list, spots live matches at the top, evaluates inline markets, and either adds a selection or navigates to a fixture page</td><td>User clicks Futures tab, scans market groups, selects a filter group, expands a market, and adds a futures selection to betslip</td><td>User browses market groups, adds selections to betslip, and optionally opens Parlay Builder for SGP</td><td>User sees the transition notification, clicks the CTA, and continues betting on live markets without friction</td><td>User reviews betslip, enters stake, confirms bet, and receives placement confirmation — then checks Bet History</td></tr><tr><th class="row-label">Player Goal</th><td>Reach World Cup betting content in one tap without searching through sport categories</td><td>Quickly understand all available World Cup betting content and decide where to go</td><td>Find the right match and market quickly — no duplicate rows, no fragmented entry points</td><td>Evaluate futures markets for the tournament in an organized, dedicated space — not buried in a generic nav hierarchy</td><td>See the full market depth for a specific match and build the best possible bet</td><td>Continue betting on the match seamlessly the moment it goes live — without losing context or betslip</td><td>Place their chosen bet accurately and quickly — correct selections, correct stake, zero rejections</td></tr><tr><th class="row-label">Business Goal</th><td>Maximize World Cup Hub discovery rate; reduce navigation friction to a single click from anywhere in the sportsbook</td><td>Orient the user to the full betting opportunity; maximize tab exploration and time on page</td><td>Maximize direct selection rate from hub; drive SGP icon engagement; capture live bets during in-progress matches</td><td>Drive high-margin futures handle; capture early-tournament revenue before odds compress; establish futures as a first-class product</td><td>Maximize market selection depth per session; drive SGP adoption; keep users in hub context via breadcrumb</td><td>Capture live betting engagement at kickoff — the highest-value betting moment; measure KR3.1 Live Engagement Rate</td><td>Maximize bet placement completion rate; drive multi-leg adoption (SGP, Parlay, Combo SGP); measure KR3.2 Acceptance Rate</td></tr><tr><th class="row-label">Success Criteria</th><td>User reaches World Cup Hub in 1 click from any page in the sportsbook</td><td>User identifies Games and Futures tabs within 5 seconds of landing and begins exploring</td><td>User adds a selection or navigates to fixture page within 3 clicks of arriving at Games tab</td><td>User finds and evaluates at least 2 futures markets within 60 seconds of clicking Futures tab</td><td>User adds at least one selection or opens Parlay Builder within 2 minutes of landing on fixture page</td><td>User arrives on live page within 5 seconds of kickoff; betslip preserved; user adds live selection within 5 minutes (KR3.1 target)</td><td>Bet placed successfully within 30 seconds of betslip open; acceptance rate at or above 90% (KR3.2)</td></tr><tr><th class="row-label">Pain Points</th><td><ul><li>Quick Link is feature-flagged — will not appear when flag is disabled post-tournament</li><li>Mobile users may need to open nav menu before Quick Link is visible</li><li>Quick Link position (3rd recommended) may vary by brand configuration</li></ul></td><td><ul><li>Nice-to-have tabs (SGPs, Boosters) may be disabled if no content is available — can appear inconsistent</li><li>First-time users may not immediately understand the value of the Futures tab</li><li>Smart default tab logic (Games vs Futures depending on content availability) must handle edge cases</li></ul></td><td><ul><li>Dense fixture list during group stage (48 matches) may require extensive scrolling without round filters</li><li>Alternative market labels (e.g., &quot;Spread 1.5&quot;, &quot;Total 2.5&quot;) may confuse casual bettors</li><li>Odds suspension during live events temporarily blocks selections — users see grey buttons with no clear explanation</li></ul></td><td><ul><li>Tournament Winner market with 32 teams is long even with Show More</li><li>Futures cannot be combined with fixture lines in parlays — may surprise users who try</li><li>Market info icon (must play for action rules) is easy to miss for casual bettors</li></ul></td><td><ul><li>Dense market list on mobile requires extensive scrolling; no jump-to-section nav</li><li>SGP available only for upcoming fixtures — live fixture Parlay Builder tab not supported in initial release</li><li>Second half markets (half-time feature) are nice-to-have and not guaranteed in first release</li></ul></td><td><ul><li>If live fixture ID mapping is unavailable, fallback message routes user to hub Games section — 1-2 extra clicks</li><li>Pre-match betslip selections placed after wager cutoff will fail — user needs clear error message</li><li>5-second detection window means brief delay between real kickoff and notification appearance</li></ul></td><td><ul><li>Odds changes between selection and placement cause rejection — users must re-accept new odds</li><li>Mobile keyboard obscures betslip stake input on small screens</li><li>Futures cannot be combined with fixture selections in parlays — users who try receive unhelpful error</li><li>Live bet placement speed is sensitive to network latency; mobile 4G users may experience rejections</li></ul></td></tr><tr><th class="row-label">Opportunities</th><td><ul><li>Feature flag enables clean activation and deactivation without code changes</li><li>Quick Link with live game count badge during tournament (&quot;3 LIVE&quot;) drives urgency</li></ul></td><td><ul><li>Sticky tabs during scroll keep navigation accessible throughout long content lists</li><li>Smart default (Games if fixtures, Futures if pre-tournament) prevents empty state confusion</li></ul></td><td><ul><li>Group stage round filter (&quot;Round 1&quot;, &quot;Round of 16&quot;) reduces scrolling in dense fixture lists</li><li>Tooltip or label on alternative market columns for casual bettor comprehension</li></ul></td><td><ul><li>Group filter chips enable instant navigation to preferred futures category</li><li>Deep-link URL (?group=tournament-winner) enables sharing specific markets via social or email</li></ul></td><td><ul><li>Breadcrumb routing to World Cup Hub (vs generic league page) keeps user in hub funnel</li><li>Parlay Builder tab placement makes SGP discoverable without requiring SGP icon knowledge</li></ul></td><td><ul><li>upcoming_live_redirection tracking event enables direct OKR measurement (KR3.1)</li><li>&quot;About to start&quot; pre-warning at 5 minutes to kickoff reduces surprise when redirect fires</li></ul></td><td><ul><li>Real-time odds change indicator in betslip before placement reduces surprise rejections</li><li>Quick-stake buttons ($10/$25/$50/$100) eliminate mobile keyboard friction</li><li>&quot;Accept Odds Changes&quot; preference setting reduces rejection rate and improves KR3.2</li></ul></td></tr><tr><th class="row-label">Ideas</th><td><ul><li>Personalized Quick Link position based on user's betting history and sport preferences</li><li>Animated trophy icon during group stage draw or tournament milestones</li></ul></td><td><ul><li>Animated LIVE badge on Games tab when matches are in progress</li><li>Onboarding tooltip for first-time visitors explaining Futures tab value proposition</li></ul></td><td><ul><li>Live match count badge on Games tab showing number of in-progress matches</li><li>Group Stage quick-filter chips to jump between tournament rounds</li></ul></td><td><ul><li>&quot;Line Movement&quot; indicator showing whether odds have moved up or down in last 24 hours</li><li>Favorites save button to bookmark futures selections for later comparison</li></ul></td><td><ul><li>Market group sticky side-nav or jump links for long market lists on mobile</li><li>&quot;Popular bets for this match&quot; section surfacing most-selected markets by other users</li></ul></td><td><ul><li>Countdown timer on upcoming fixture page for final minutes before kickoff</li><li>Pre-fill stake amount after redirect so user can place live bet with one tap</li></ul></td><td><ul><li>Instant bet confirmation animation reinforces placement success moment</li><li>Post-placement CTA linking directly to live match tracker for the bet just placed</li></ul></td></tr><tr><th class="row-label">Drives</th><td><ul><li>CD2: Development &amp; Accomplishment — direct path to their goal feels like instant progress</li><li>CD7: Unpredictability &amp; Curiosity — excited to see what World Cup odds are available</li></ul></td><td><ul><li>CD2: Development &amp; Accomplishment — feels in control with clearly organized, accessible content</li><li>CD4: Ownership &amp; Possession — this is their dedicated World Cup destination</li><li>CD7: Unpredictability &amp; Curiosity — curious about live odds, match listings, and futures all at once</li></ul></td><td><ul><li>CD2: Development &amp; Accomplishment — making smart choices with all data visible in one clean list</li><li>CD3: Empowerment of Creativity — building bet strategy using SGP icon and inline market comparison</li><li>CD4: Ownership &amp; Possession — adding selections and building betslip feels like claiming a position</li><li>CD6: Scarcity &amp; Impatience — live game is in progress; must decide and bet before odds move</li></ul></td><td><ul><li>CD4: Ownership &amp; Possession — wants to claim a long-term position on the tournament outcome</li><li>CD7: Unpredictability &amp; Curiosity — intrigued by exploring all futures possibilities in one organized place</li><li>CD2: Development &amp; Accomplishment — feels like a smart bettor capturing early value before odds shorten</li><li>CD8: Loss &amp; Avoidance — fears missing favorable odds before they compress as tournament approaches</li></ul></td><td><ul><li>CD3: Empowerment of Creativity — building complex bets from full market depth feels strategic</li><li>CD4: Ownership &amp; Possession — building their personal bet strategy selection by selection</li><li>CD6: Scarcity &amp; Impatience — live markets moving; must decide before odds shift</li><li>CD2: Development &amp; Accomplishment — navigating all markets feels like expert behavior</li></ul></td><td><ul><li>CD6: Scarcity &amp; Impatience — live odds are moving right now; the betting window is open</li><li>CD7: Unpredictability &amp; Curiosity — in-play moment is thrilling; what happens on the first goal?</li><li>CD8: Loss &amp; Avoidance — without the redirect would have missed the live betting window entirely</li><li>CD2: Development &amp; Accomplishment — feels in control; didn't miss the live opportunity</li></ul></td><td><ul><li>CD7: Unpredictability &amp; Curiosity — anticipation of match outcome starts the moment bet is placed</li><li>CD4: Ownership &amp; Possession — the bet is now officially theirs; they have a stake in the tournament</li><li>CD6: Scarcity &amp; Impatience — wants to lock in before live odds move further</li><li>CD8: Loss &amp; Avoidance — fear of rejection or odds change at the confirmation moment</li><li>CD2: Development &amp; Accomplishment — placing the bet is the completed goal of the entire journey</li></ul></td></tr><tr><th class="row-label">Data Sources</th><td><ul><li>BEAT: element_interaction (element_type: &quot;quick_link&quot;, element_name: &quot;World Cup 2026&quot;)</li><li>Mixpanel: Click-through rate from Quick Link to Hub page; Quick Link impressions vs clicks</li></ul></td><td><ul><li>BEAT: page_view (page_type: &quot;world_cup_hub&quot;, active_tab: &quot;games&quot;)</li><li>Mixpanel: Bounce rate from hub; time on page; tab click distribution (Dashboard Metric #2)</li></ul></td><td><ul><li>BEAT: selection_added (bet_context: &quot;hub_games_section&quot;)</li><li>BEAT: element_interaction (element_type: &quot;event_card&quot;, element_name: fixture name)</li><li>BEAT: sgp_builder_opened (from hub Games section)</li><li>Mixpanel: Hub view → Selection added conversion rate; SGP Conversion Rate (Dashboard Metric #4, #7a)</li></ul></td><td><ul><li>BEAT: page_view (page_type: &quot;world_cup_hub&quot;, active_tab: &quot;futures&quot;)</li><li>BEAT: selection_added (is_outright: true, league: &quot;fifa-world-cup-2026&quot;)</li><li>Mixpanel: Futures Handle Share (KR2.2); Futures tab views / total hub views (Dashboard Metric #2)</li></ul></td><td><ul><li>BEAT: page_view (page_type: &quot;fixture_page_upcoming&quot; or &quot;fixture_page_live&quot;, fixture_id, fixture_name)</li><li>BEAT: sgp_builder_opened (fixture_id, fixture_name)</li><li>Mixpanel: Hub → Fixture → Selection → Bet placement funnel (Dashboard Metric #7a)</li></ul></td><td><ul><li>BEAT: upcoming_live_redirection (fixture_id, live_fixture_id, fixture_name, current_url, redirection_url)</li><li>BEAT: selection_added within 5 min of redirection event (defines KR3.1 engaged cohort)</li><li>Mixpanel: Live Transition Conversion Rate (Dashboard Metric #5); KR3.1 Live Engagement Rate</li></ul></td><td><ul><li>BEAT: bet_placement_selection (bet_type, stake_amount, status, league, is_outright)</li><li>BEAT: bet_placed (bet_id, num_selections, bet_type, stake_amount)</li><li>Mixpanel: Hub Conversion Rate (KR1.2); Bet Acceptance Rate (KR3.2); Bet Type Distribution (Dashboard #6); SGP Adoption Rate (KR2.1)</li></ul></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<aside id="detail-panel">
+  <div class="panel-topbar">
+    <div class="panel-topbar-left">
+      <div class="panel-step-num" id="panel-step-num"></div>
+      <div class="panel-step-name" id="panel-step-name"></div>
+    </div>
+    <button class="panel-close" id="panel-close">&#x2715;</button>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</aside>
+<div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt="" /></div>
+
+<script>
+const JOURNEY = {"slug":"world-cup-hub","title":"Bet on World Cup via the League Hub","id":"world-cup-hub","description":"A punter discovers the World Cup Hub via Quick Link, browses unified Games and Futures content, views a fixture page, and places bets — including a seamless automatic transition from pre-match to live betting","product":"BetOnline Sportsbook","last_updated":"2026-04-14","phases":[{"name":"Discovery","guiding_question":"How does a punter find and arrive at all World Cup betting content without navigating through deep hierarchical menus?"},{"name":"Exploration","guiding_question":"Once inside the hub, how does a punter orient themselves and find the content they want to bet on?"},{"name":"Bet Placement & Live Engagement","guiding_question":"How does a punter move from browsing to placing a bet, and stay engaged when a match goes live?"}],"steps":[{"name":"Step 1: Access Hub via Quick Link","branch":null,"persona":"Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)","touchpoint":"Quick Links navigation — left nav (desktop) / mobile top nav","screenshot":"screenshots/wc-step1-quicklink.png","description":"The user is on the sportsbook and sees the \"World Cup 2026\" Quick Link prominently displayed in the navigation with a trophy icon. A single click routes them directly to the World Cup Hub, bypassing the previous deep sport/league hierarchy entirely.","player_goal":"Reach World Cup betting content in one tap without searching through sport categories","business_goal":"Maximize World Cup Hub discovery rate; reduce navigation friction to a single click from anywhere in the sportsbook","player_action_description":"User spots the trophy icon Quick Link in the left nav and clicks it","player_emotions":"Confident and purposeful — World Cup is immediately visible, no hunting required","success_criteria":"User reaches World Cup Hub in 1 click from any page in the sportsbook","user_actions":["Sees \"World Cup 2026\" Quick Link with trophy icon in Quick Links section","Clicks Quick Link from any page in the sportsbook","Lands directly on World Cup Hub with session and betslip intact"],"pain_points":["Quick Link is feature-flagged — will not appear when flag is disabled post-tournament","Mobile users may need to open nav menu before Quick Link is visible","Quick Link position (3rd recommended) may vary by brand configuration"],"opportunities":["Feature flag enables clean activation and deactivation without code changes","Quick Link with live game count badge during tournament (\"3 LIVE\") drives urgency"],"ideas":["Personalized Quick Link position based on user's betting history and sport preferences","Animated trophy icon during group stage draw or tournament milestones"],"data_sources":["BEAT: element_interaction (element_type: \"quick_link\", element_name: \"World Cup 2026\")","Mixpanel: Click-through rate from Quick Link to Hub page; Quick Link impressions vs clicks"],"octalysis_drives":["CD2: Development & Accomplishment — direct path to their goal feels like instant progress","CD7: Unpredictability & Curiosity — excited to see what World Cup odds are available"],"screenshots":[],"phase":"Discovery","_screenshots":["screenshots/wc-step1-quicklink.png"]},{"name":"Step 2: Land on World Cup Hub","branch":null,"persona":"Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)","touchpoint":"World Cup Hub page (/sportsbook/world-cup-hub/)","screenshot":"screenshots/wc-step2-hub.png","description":"The user arrives at the unified World Cup Hub. The page displays a header with the World Cup trophy and \"World Cup Hub\" title, and a tab selector showing Games, Futures, Same Game Parlays, and Odds Boosters. Games tab is active by default if fixtures are available. All World Cup content — previously fragmented across pre-match, live, and outrights — is now in a single destination.","player_goal":"Quickly understand all available World Cup betting content and decide where to go","business_goal":"Orient the user to the full betting opportunity; maximize tab exploration and time on page","player_action_description":"User scans the hub, reads tab labels, and decides whether to browse Games or Futures first","player_emotions":"Impressed and oriented — everything World Cup in one place, clear structure, no confusion","success_criteria":"User identifies Games and Futures tabs within 5 seconds of landing and begins exploring","user_actions":["Views hub header with World Cup trophy icon and \"World Cup Hub\" title","Sees four tabs: Games, Futures, Same Game Parlays, Odds Boosters","Games tab active by default if upcoming or live fixtures are available","Scrolls tabs to assess content options before diving in"],"pain_points":["Nice-to-have tabs (SGPs, Boosters) may be disabled if no content is available — can appear inconsistent","First-time users may not immediately understand the value of the Futures tab","Smart default tab logic (Games vs Futures depending on content availability) must handle edge cases"],"opportunities":["Sticky tabs during scroll keep navigation accessible throughout long content lists","Smart default (Games if fixtures, Futures if pre-tournament) prevents empty state confusion"],"ideas":["Animated LIVE badge on Games tab when matches are in progress","Onboarding tooltip for first-time visitors explaining Futures tab value proposition"],"data_sources":["BEAT: page_view (page_type: \"world_cup_hub\", active_tab: \"games\")","Mixpanel: Bounce rate from hub; time on page; tab click distribution (Dashboard Metric #2)"],"octalysis_drives":["CD2: Development & Accomplishment — feels in control with clearly organized, accessible content","CD4: Ownership & Possession — this is their dedicated World Cup destination","CD7: Unpredictability & Curiosity — curious about live odds, match listings, and futures all at once"],"screenshots":[],"phase":"Exploration","_screenshots":["screenshots/wc-step2-hub.png"]},{"name":"Step 3a: Browse Games Section","branch":"games","persona":"Alex (World Cup Opportunist), Maria (Soccer-First Bettor)","touchpoint":"World Cup Hub — Games tab","screenshot":"screenshots/wc-step3a-games.png","description":"The user browses World Cup fixtures with live matches shown first, followed by upcoming matches sorted chronologically. Each event row displays primary markets directly (2-way/3-way), plus alternative and auxiliary markets consolidated in the same row. No duplicate entries for the same fixture. SGP icon visible on eligible upcoming matches. User can bet directly from the row or tap into a full fixture page.","player_goal":"Find the right match and market quickly — no duplicate rows, no fragmented entry points","business_goal":"Maximize direct selection rate from hub; drive SGP icon engagement; capture live bets during in-progress matches","player_action_description":"User scans the fixture list, spots live matches at the top, evaluates inline markets, and either adds a selection or navigates to a fixture page","player_emotions":"Engaged and efficient — clean list, no duplicate confusion, live matches immediately visible","success_criteria":"User adds a selection or navigates to fixture page within 3 clicks of arriving at Games tab","user_actions":["Sees live matches first with red LIVE badge, real-time score, and live odds","Scrolls to upcoming fixtures sorted by kick-off time","Spots SGP icon on eligible upcoming matches","Clicks odds button directly from event row to add selection to betslip","OR taps event row (outside odds/SGP area) to navigate to full fixture page","OR clicks SGP icon to open Same Game Parlay builder"],"pain_points":["Dense fixture list during group stage (48 matches) may require extensive scrolling without round filters","Alternative market labels (e.g., \"Spread 1.5\", \"Total 2.5\") may confuse casual bettors","Odds suspension during live events temporarily blocks selections — users see grey buttons with no clear explanation"],"opportunities":["Group stage round filter (\"Round 1\", \"Round of 16\") reduces scrolling in dense fixture lists","Tooltip or label on alternative market columns for casual bettor comprehension"],"ideas":["Live match count badge on Games tab showing number of in-progress matches","Group Stage quick-filter chips to jump between tournament rounds"],"data_sources":["BEAT: selection_added (bet_context: \"hub_games_section\")","BEAT: element_interaction (element_type: \"event_card\", element_name: fixture name)","BEAT: sgp_builder_opened (from hub Games section)","Mixpanel: Hub view → Selection added conversion rate; SGP Conversion Rate (Dashboard Metric #4, #7a)"],"octalysis_drives":["CD2: Development & Accomplishment — making smart choices with all data visible in one clean list","CD3: Empowerment of Creativity — building bet strategy using SGP icon and inline market comparison","CD4: Ownership & Possession — adding selections and building betslip feels like claiming a position","CD6: Scarcity & Impatience — live game is in progress; must decide and bet before odds move"],"screenshots":[],"phase":"Exploration","_screenshots":["screenshots/wc-step3a-games.png"]},{"name":"Step 3b: Browse Futures Section","branch":"futures","persona":"Alex (World Cup Opportunist — tournament winner bet), Maria (Soccer-First Bettor — top scorer, group winners)","touchpoint":"World Cup Hub — Futures tab","screenshot":"screenshots/wc-step3b-futures.png","description":"The user clicks the Futures tab to explore long-term tournament betting markets. Markets are organized by group (Tournament Winner, Top Goalscorer, Group Winners, To Reach Final, etc.) with \"All\" selected by default. Selection lists with 20+ options use expandable \"Show More\" to keep the view clean. Deep-link URLs with ?group= parameter allow direct access to specific markets via bookmarks or shared links.","player_goal":"Evaluate futures markets for the tournament in an organized, dedicated space — not buried in a generic nav hierarchy","business_goal":"Drive high-margin futures handle; capture early-tournament revenue before odds compress; establish futures as a first-class product","player_action_description":"User clicks Futures tab, scans market groups, selects a filter group, expands a market, and adds a futures selection to betslip","player_emotions":"Exploratory and strategic — feels like a dedicated futures destination, not a buried afterthought","success_criteria":"User finds and evaluates at least 2 futures markets within 60 seconds of clicking Futures tab","user_actions":["Clicks Futures tab from Hub","Sees \"All\" group selected by default with all futures markets in backoffice-defined order","Clicks a group filter (e.g., \"Tournament Winner\") to narrow view","Expands collapsible market with 20+ selections using \"Show More\"","Checks market info icon (e.g., \"Must play for action\")","Clicks odds button (e.g., \"Brazil +400\") to add to betslip"],"pain_points":["Tournament Winner market with 32 teams is long even with Show More","Futures cannot be combined with fixture lines in parlays — may surprise users who try","Market info icon (must play for action rules) is easy to miss for casual bettors"],"opportunities":["Group filter chips enable instant navigation to preferred futures category","Deep-link URL (?group=tournament-winner) enables sharing specific markets via social or email"],"ideas":["\"Line Movement\" indicator showing whether odds have moved up or down in last 24 hours","Favorites save button to bookmark futures selections for later comparison"],"data_sources":["BEAT: page_view (page_type: \"world_cup_hub\", active_tab: \"futures\")","BEAT: selection_added (is_outright: true, league: \"fifa-world-cup-2026\")","Mixpanel: Futures Handle Share (KR2.2); Futures tab views / total hub views (Dashboard Metric #2)"],"octalysis_drives":["CD4: Ownership & Possession — wants to claim a long-term position on the tournament outcome","CD7: Unpredictability & Curiosity — intrigued by exploring all futures possibilities in one organized place","CD2: Development & Accomplishment — feels like a smart bettor capturing early value before odds shorten","CD8: Loss & Avoidance — fears missing favorable odds before they compress as tournament approaches"],"screenshots":[],"phase":"Exploration","_screenshots":["screenshots/wc-step3b-futures.png"]},{"name":"Step 4: View Fixture Page","branch":null,"persona":"Alex (World Cup Opportunist), Maria (Soccer-First Bettor)","touchpoint":"Fixture Specific Page — upcoming or live (/sportsbook/.../fixture/ID)","screenshot":"screenshots/wc-step4-fixture.png","description":"User taps an event row from the Games section and lands on the Fixture Specific Page for a specific match. The page displays all markets organized in groups (All Markets, Parlay Builder), supports the SGP iFrame builder, and shows alternative/auxiliary markets within the standard template. Breadcrumb routes back to /sportsbook/world-cup-hub/ — not the generic league path — keeping the user in the hub context.","player_goal":"See the full market depth for a specific match and build the best possible bet","business_goal":"Maximize market selection depth per session; drive SGP adoption; keep users in hub context via breadcrumb","player_action_description":"User browses market groups, adds selections to betslip, and optionally opens Parlay Builder for SGP","player_emotions":"Focused and in control — full market depth available, clear breadcrumb back to hub, SGP easily accessible","success_criteria":"User adds at least one selection or opens Parlay Builder within 2 minutes of landing on fixture page","user_actions":["Clicks event row from Hub Games section","Lands on fixture page with breadcrumb showing \"World Cup Hub\" (routes back to hub)","Browses All Markets tab (Main, Goalscorer, Totals, etc.)","Clicks odds button to add selection to betslip","OR clicks Parlay Builder tab and scrolls to SGP iFrame to build a Same Game Parlay","Taps breadcrumb to return to hub with session intact"],"pain_points":["Dense market list on mobile requires extensive scrolling; no jump-to-section nav","SGP available only for upcoming fixtures — live fixture Parlay Builder tab not supported in initial release","Second half markets (half-time feature) are nice-to-have and not guaranteed in first release"],"opportunities":["Breadcrumb routing to World Cup Hub (vs generic league page) keeps user in hub funnel","Parlay Builder tab placement makes SGP discoverable without requiring SGP icon knowledge"],"ideas":["Market group sticky side-nav or jump links for long market lists on mobile","\"Popular bets for this match\" section surfacing most-selected markets by other users"],"data_sources":["BEAT: page_view (page_type: \"fixture_page_upcoming\" or \"fixture_page_live\", fixture_id, fixture_name)","BEAT: sgp_builder_opened (fixture_id, fixture_name)","Mixpanel: Hub → Fixture → Selection → Bet placement funnel (Dashboard Metric #7a)"],"octalysis_drives":["CD3: Empowerment of Creativity — building complex bets from full market depth feels strategic","CD4: Ownership & Possession — building their personal bet strategy selection by selection","CD6: Scarcity & Impatience — live markets moving; must decide before odds shift","CD2: Development & Accomplishment — navigating all markets feels like expert behavior"],"screenshots":[],"phase":"Bet Placement & Live Engagement","_screenshots":["screenshots/wc-step4-fixture.png"]},{"name":"Step 5: Live Transition — Upcoming to Live","branch":null,"persona":"Alex (World Cup Opportunist), Maria (Soccer-First Bettor)","touchpoint":"Fixture Specific Page — automatic redirect from upcoming to live","screenshot":"screenshots/wc-step5-transition.png","description":"While browsing an upcoming fixture page, the match kicks off. The system detects the status change within 5 seconds, fires the upcoming_live_redirection tracking event, and displays a live availability notification with a CTA. User clicks the CTA and lands on the live fixture page with LIVE badge, real-time score, and live markets — session, balance, and betslip fully preserved. No manual searching required.","player_goal":"Continue betting on the match seamlessly the moment it goes live — without losing context or betslip","business_goal":"Capture live betting engagement at kickoff — the highest-value betting moment; measure KR3.1 Live Engagement Rate","player_action_description":"User sees the transition notification, clicks the CTA, and continues betting on live markets without friction","player_emotions":"Seamlessly engaged — zero friction, arrives on live page with betslip intact and ready to bet immediately","success_criteria":"User arrives on live page within 5 seconds of kickoff; betslip preserved; user adds live selection within 5 minutes (KR3.1 target)","user_actions":["Was browsing upcoming fixture page before kickoff","System detects match start within 5 seconds; displays live availability notification","User clicks \"OK, Got It\" CTA","Lands on live fixture page with LIVE badge, current score 0-0, and live markets","Continues placing bets without searching for the live match"],"pain_points":["If live fixture ID mapping is unavailable, fallback message routes user to hub Games section — 1-2 extra clicks","Pre-match betslip selections placed after wager cutoff will fail — user needs clear error message","5-second detection window means brief delay between real kickoff and notification appearance"],"opportunities":["upcoming_live_redirection tracking event enables direct OKR measurement (KR3.1)","\"About to start\" pre-warning at 5 minutes to kickoff reduces surprise when redirect fires"],"ideas":["Countdown timer on upcoming fixture page for final minutes before kickoff","Pre-fill stake amount after redirect so user can place live bet with one tap"],"data_sources":["BEAT: upcoming_live_redirection (fixture_id, live_fixture_id, fixture_name, current_url, redirection_url)","BEAT: selection_added within 5 min of redirection event (defines KR3.1 engaged cohort)","Mixpanel: Live Transition Conversion Rate (Dashboard Metric #5); KR3.1 Live Engagement Rate"],"octalysis_drives":["CD6: Scarcity & Impatience — live odds are moving right now; the betting window is open","CD7: Unpredictability & Curiosity — in-play moment is thrilling; what happens on the first goal?","CD8: Loss & Avoidance — without the redirect would have missed the live betting window entirely","CD2: Development & Accomplishment — feels in control; didn't miss the live opportunity"],"screenshots":[],"phase":"Bet Placement & Live Engagement","_screenshots":["screenshots/wc-step5-transition.png"]},{"name":"Step 6: Place Bet via Betslip","branch":null,"persona":"Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)","touchpoint":"Betslip — persistent component across all hub pages and fixture pages","screenshot":"screenshots/wc-step6-betslip.png","description":"User has added selections from Hub Games, Futures, and/or Fixture Pages. The betslip automatically determines bet type (Straight, Parlay, Live Parlay, SGP, Combo SGP), calculates potential payout dynamically, and enables placement. All selections persist across navigation within the hub. After placement, bet appears in Bet History under Pending Bets.","player_goal":"Place their chosen bet accurately and quickly — correct selections, correct stake, zero rejections","business_goal":"Maximize bet placement completion rate; drive multi-leg adoption (SGP, Parlay, Combo SGP); measure KR3.2 Acceptance Rate","player_action_description":"User reviews betslip, enters stake, confirms bet, and receives placement confirmation — then checks Bet History","player_emotions":"Excited and decisive — clear payout display, intuitive stake entry, and fast confirmation","success_criteria":"Bet placed successfully within 30 seconds of betslip open; acceptance rate at or above 90% (KR3.2)","user_actions":["Reviews betslip selections (selection name, match, odds, bet type)","Notes automatic bet type assignment (e.g., Straight → Parlay when 2nd selection added)","Enters stake amount","Reviews potential payout","Clicks \"Place Bet\"","Receives confirmation; bet appears in Bet History → Pending Bets"],"pain_points":["Odds changes between selection and placement cause rejection — users must re-accept new odds","Mobile keyboard obscures betslip stake input on small screens","Futures cannot be combined with fixture selections in parlays — users who try receive unhelpful error","Live bet placement speed is sensitive to network latency; mobile 4G users may experience rejections"],"opportunities":["Real-time odds change indicator in betslip before placement reduces surprise rejections","Quick-stake buttons ($10/$25/$50/$100) eliminate mobile keyboard friction","\"Accept Odds Changes\" preference setting reduces rejection rate and improves KR3.2"],"ideas":["Instant bet confirmation animation reinforces placement success moment","Post-placement CTA linking directly to live match tracker for the bet just placed"],"data_sources":["BEAT: bet_placement_selection (bet_type, stake_amount, status, league, is_outright)","BEAT: bet_placed (bet_id, num_selections, bet_type, stake_amount)","Mixpanel: Hub Conversion Rate (KR1.2); Bet Acceptance Rate (KR3.2); Bet Type Distribution (Dashboard #6); SGP Adoption Rate (KR2.1)"],"octalysis_drives":["CD7: Unpredictability & Curiosity — anticipation of match outcome starts the moment bet is placed","CD4: Ownership & Possession — the bet is now officially theirs; they have a stake in the tournament","CD6: Scarcity & Impatience — wants to lock in before live odds move further","CD8: Loss & Avoidance — fear of rejection or odds change at the confirmation moment","CD2: Development & Accomplishment — placing the bet is the completed goal of the entire journey"],"screenshots":[],"phase":"Bet Placement & Live Engagement","_screenshots":["screenshots/wc-step6-betslip.png"]}]};
+const SS      = {"screenshots/wc-step1-quicklink.png":null,"screenshots/wc-step2-hub.png":null,"screenshots/wc-step3a-games.png":null,"screenshots/wc-step3b-futures.png":null,"screenshots/wc-step4-fixture.png":null,"screenshots/wc-step5-transition.png":null,"screenshots/wc-step6-betslip.png":null};
+const OCT     = {"CD1":{"name":"Epic Meaning & Calling","hat":"white","color":"#6366f1"},"CD2":{"name":"Development & Accomplishment","hat":"white","color":"#22c55e"},"CD3":{"name":"Empowerment of Creativity","hat":"white","color":"#a855f7"},"CD4":{"name":"Ownership & Possession","hat":"white","color":"#14b8a6"},"CD5":{"name":"Social Influence & Relatedness","hat":"white","color":"#f59e0b"},"CD6":{"name":"Scarcity & Impatience","hat":"black","color":"#f97316"},"CD7":{"name":"Unpredictability & Curiosity","hat":"black","color":"#06b6d4"},"CD8":{"name":"Loss & Avoidance","hat":"black","color":"#ef4444"}};
+
+/* helpers */
+function he(s){ if(!s)return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function block(title,val){ if(!val)return ''; return '<div class="panel-section"><div class="panel-section-title">'+he(title)+'</div><p class="panel-text">'+he(val)+'</p></div>'; }
+function listBlock(title,items,cls){ if(!items||!items.length)return ''; return '<div class="panel-section"><div class="panel-section-title">'+he(title)+'</div><ul class="panel-list '+cls+'">'+items.map(i=>'<li>'+he(i)+'</li>').join('')+'</ul></div>'; }
+
+/* panel */
+const panel     = document.getElementById('detail-panel');
+const panelNum  = document.getElementById('panel-step-num');
+const panelName = document.getElementById('panel-step-name');
+const panelBody = document.getElementById('panel-body');
+
+function openPanel(idx){
+  const s = JOURNEY.steps[idx];
+  panelNum.textContent  = 'Step '+(idx+1)+(s.phase?' · '+s.phase:'');
+  panelName.textContent = s.name.replace(/^Step \d+[a-z]*:\s*/i,'');
+
+  const ssKeys = s._screenshots||(s.screenshot?[s.screenshot]:[]);
+  const ssHTML = ssKeys.length
+    ? '<div class="panel-screenshots">'+ssKeys.map(k=> SS[k]
+        ? '<img class="panel-ss" src="'+SS[k]+'" alt="'+he(k)+'" data-src="'+SS[k]+'" />'
+        : '<div class="panel-ss-missing">'+he(k.split('/').pop())+'</div>'
+      ).join('')+'</div>'
+    : '';
+
+  const drivesHTML = (s.octalysis_drives||[]).map(d=>{
+    const m=d.match(/^(CD[1-8])/i); const code=m?m[1].toUpperCase():null; const def=code&&OCT[code];
+    if(!def)return '';
+    const parts=d.split('\u2014'); const reason=parts.slice(1).join('\u2014').trim();
+    return '<div class="drive-row" style="background:'+def.color+'12;border:1px solid '+def.color+'40">'
+      +'<span class="pdc-code" style="color:'+def.color+'">'+code+'</span>'
+      +'<span class="pdc-name">'+he(def.name)+'</span>'
+      +(reason?'<span class="pdc-reason">'+he(reason)+'</span>':'')
+      +'<span class="hat-badge hat-'+def.hat+'">'+def.hat+'</span>'
+      +'</div>';
+  }).join('');
+
+  panelBody.innerHTML = [
+    ssHTML,
+    block('Description', s.description),
+    '<div class="panel-two-col">'
+      +'<div class="panel-block"><div class="panel-block-title">Player Goal</div><div class="panel-block-text">'+he(s.player_goal||'—')+'</div></div>'
+      +'<div class="panel-block"><div class="panel-block-title">Business Goal</div><div class="panel-block-text">'+he(s.business_goal||'—')+'</div></div>'
+    +'</div>',
+    block('Player Action', s.player_action_description),
+    block('Success Criteria', s.success_criteria),
+    listBlock('User Actions', s.user_actions, 'actions'),
+    drivesHTML ? '<div class="panel-section"><div class="panel-section-title">Octalysis Drives</div><div class="panel-drives">'+drivesHTML+'</div></div>' : '',
+    listBlock('Ideas', s.ideas, 'ideas'),
+    listBlock('Data Sources', s.data_sources, 'data'),
+    listBlock('Pain Points (all)', s.pain_points, ''),
+    listBlock('Opportunities (all)', s.opportunities, ''),
+  ].join('');
+
+  panel.classList.add('open');
+  document.querySelectorAll('.step-card').forEach(c=>c.classList.remove('selected'));
+  const sel=document.querySelector('.step-card[data-idx="'+idx+'"]');
+  if(sel)sel.classList.add('selected');
+}
+
+/* card clicks */
+document.querySelectorAll('.step-card').forEach(card=>{
+  card.addEventListener('click', e=>{
+    if(!e.target.closest('.detail-btn')) openPanel(Number(card.dataset.idx));
+  });
+});
+document.querySelectorAll('.detail-btn').forEach(btn=>{
+  btn.addEventListener('click', e=>{ e.stopPropagation(); openPanel(Number(btn.dataset.idx)); });
+});
+
+document.getElementById('panel-close').addEventListener('click',()=>{
+  panel.classList.remove('open');
+  document.querySelectorAll('.step-card').forEach(c=>c.classList.remove('selected'));
+});
+
+/* lightbox */
+const lightbox    = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+panelBody.addEventListener('click',e=>{
+  const img=e.target.closest('.panel-ss'); if(!img)return;
+  lightboxImg.src=img.dataset.src; lightbox.classList.add('open');
+});
+lightbox.addEventListener('click',()=>lightbox.classList.remove('open'));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ lightbox.classList.remove('open'); panel.classList.remove('open'); }});
+
+/* view toggle */
+const btnCards=document.getElementById('btn-cards');
+const btnTable=document.getElementById('btn-table');
+const viewCards=document.getElementById('view-cards');
+const viewTable=document.getElementById('view-table');
+btnCards.addEventListener('click',()=>{ viewCards.hidden=false; viewTable.hidden=true; btnCards.classList.add('active'); btnTable.classList.remove('active'); });
+btnTable.addEventListener('click',()=>{ viewTable.hidden=false; viewCards.hidden=true; btnTable.classList.add('active'); btnCards.classList.remove('active'); });
+
+/* export */
+document.getElementById('btn-export').addEventListener('click',()=>{
+  let md='# Journey: '+JOURNEY.title+'\n\n**Product:** '+JOURNEY.product+'  \n**Last updated:** '+JOURNEY.last_updated+'\n\n---\n\n';
+  let phase=null;
+  JOURNEY.steps.forEach((s,i)=>{
+    if(s.phase!==phase){ phase=s.phase; md+='## Phase: '+phase+'\n\n'; }
+    md+='### Step '+(i+1)+': '+s.name.replace(/^Step \d+[a-z]*:\s*/i,'')+'\n\n';
+    if(s.player_emotions) md+='**Emotions:** '+s.player_emotions+'\n\n';
+    if(s.pain_points&&s.pain_points.length) md+='**Pain Points:**\n'+s.pain_points.map(p=>'- '+p).join('\n')+'\n\n';
+    if(s.opportunities&&s.opportunities.length) md+='**Opportunities:**\n'+s.opportunities.map(o=>'- '+o).join('\n')+'\n\n';
+    if(s.ideas&&s.ideas.length) md+='**Ideas:**\n'+s.ideas.map(x=>'- '+x).join('\n')+'\n\n';
+    md+='---\n\n';
+  });
+  const a=Object.assign(document.createElement('a'),{ href:URL.createObjectURL(new Blob([md],{type:'text/markdown'})), download:JOURNEY.id+'-export.md' });
+  a.click();
+});
+</script>
+</body>
+</html>
