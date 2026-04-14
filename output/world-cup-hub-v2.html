@@ -1,0 +1,367 @@
+<!DOCTYPE html><html><body><pre>{
+  &quot;slug&quot;: &quot;world-cup-hub&quot;,
+  &quot;title&quot;: &quot;Bet on World Cup via the League Hub&quot;,
+  &quot;id&quot;: &quot;world-cup-hub&quot;,
+  &quot;description&quot;: &quot;A punter discovers the World Cup Hub via Quick Link, browses unified Games and Futures content, views a fixture page, and places bets — including a seamless automatic transition from pre-match to live betting&quot;,
+  &quot;product&quot;: &quot;BetOnline Sportsbook&quot;,
+  &quot;last_updated&quot;: &quot;2026-04-14&quot;,
+  &quot;phases&quot;: [
+    {
+      &quot;name&quot;: &quot;Discovery&quot;,
+      &quot;guiding_question&quot;: &quot;How does a punter find and arrive at all World Cup betting content without navigating through deep hierarchical menus?&quot;
+    },
+    {
+      &quot;name&quot;: &quot;Exploration&quot;,
+      &quot;guiding_question&quot;: &quot;Once inside the hub, how does a punter orient themselves and find the content they want to bet on?&quot;
+    },
+    {
+      &quot;name&quot;: &quot;Bet Placement &amp; Live Engagement&quot;,
+      &quot;guiding_question&quot;: &quot;How does a punter move from browsing to placing a bet, and stay engaged when a match goes live?&quot;
+    }
+  ],
+  &quot;steps&quot;: [
+    {
+      &quot;name&quot;: &quot;Step 1: Access Hub via Quick Link&quot;,
+      &quot;branch&quot;: null,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)&quot;,
+      &quot;touchpoint&quot;: &quot;Quick Links navigation — left nav (desktop) / mobile top nav&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step1-quicklink.png&quot;,
+      &quot;description&quot;: &quot;The user is on the sportsbook and sees the \&quot;World Cup 2026\&quot; Quick Link prominently displayed in the navigation with a trophy icon. A single click routes them directly to the World Cup Hub, bypassing the previous deep sport/league hierarchy entirely.&quot;,
+      &quot;player_goal&quot;: &quot;Reach World Cup betting content in one tap without searching through sport categories&quot;,
+      &quot;business_goal&quot;: &quot;Maximize World Cup Hub discovery rate; reduce navigation friction to a single click from anywhere in the sportsbook&quot;,
+      &quot;player_action_description&quot;: &quot;User spots the trophy icon Quick Link in the left nav and clicks it&quot;,
+      &quot;player_emotions&quot;: &quot;Confident and purposeful — World Cup is immediately visible, no hunting required&quot;,
+      &quot;success_criteria&quot;: &quot;User reaches World Cup Hub in 1 click from any page in the sportsbook&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Sees \&quot;World Cup 2026\&quot; Quick Link with trophy icon in Quick Links section&quot;,
+        &quot;Clicks Quick Link from any page in the sportsbook&quot;,
+        &quot;Lands directly on World Cup Hub with session and betslip intact&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;Quick Link is feature-flagged — will not appear when flag is disabled post-tournament&quot;,
+        &quot;Mobile users may need to open nav menu before Quick Link is visible&quot;,
+        &quot;Quick Link position (3rd recommended) may vary by brand configuration&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;Feature flag enables clean activation and deactivation without code changes&quot;,
+        &quot;Quick Link with live game count badge during tournament (\&quot;3 LIVE\&quot;) drives urgency&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;Personalized Quick Link position based on user's betting history and sport preferences&quot;,
+        &quot;Animated trophy icon during group stage draw or tournament milestones&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: element_interaction (element_type: \&quot;quick_link\&quot;, element_name: \&quot;World Cup 2026\&quot;)&quot;,
+        &quot;Mixpanel: Click-through rate from Quick Link to Hub page; Quick Link impressions vs clicks&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD2: Development &amp; Accomplishment — direct path to their goal feels like instant progress&quot;,
+        &quot;CD7: Unpredictability &amp; Curiosity — excited to see what World Cup odds are available&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Discovery&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step1-quicklink.png&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;Step 2: Land on World Cup Hub&quot;,
+      &quot;branch&quot;: null,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)&quot;,
+      &quot;touchpoint&quot;: &quot;World Cup Hub page (/sportsbook/world-cup-hub/)&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step2-hub.png&quot;,
+      &quot;description&quot;: &quot;The user arrives at the unified World Cup Hub. The page displays a header with the World Cup trophy and \&quot;World Cup Hub\&quot; title, and a tab selector showing Games, Futures, Same Game Parlays, and Odds Boosters. Games tab is active by default if fixtures are available. All World Cup content — previously fragmented across pre-match, live, and outrights — is now in a single destination.&quot;,
+      &quot;player_goal&quot;: &quot;Quickly understand all available World Cup betting content and decide where to go&quot;,
+      &quot;business_goal&quot;: &quot;Orient the user to the full betting opportunity; maximize tab exploration and time on page&quot;,
+      &quot;player_action_description&quot;: &quot;User scans the hub, reads tab labels, and decides whether to browse Games or Futures first&quot;,
+      &quot;player_emotions&quot;: &quot;Impressed and oriented — everything World Cup in one place, clear structure, no confusion&quot;,
+      &quot;success_criteria&quot;: &quot;User identifies Games and Futures tabs within 5 seconds of landing and begins exploring&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Views hub header with World Cup trophy icon and \&quot;World Cup Hub\&quot; title&quot;,
+        &quot;Sees four tabs: Games, Futures, Same Game Parlays, Odds Boosters&quot;,
+        &quot;Games tab active by default if upcoming or live fixtures are available&quot;,
+        &quot;Scrolls tabs to assess content options before diving in&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;Nice-to-have tabs (SGPs, Boosters) may be disabled if no content is available — can appear inconsistent&quot;,
+        &quot;First-time users may not immediately understand the value of the Futures tab&quot;,
+        &quot;Smart default tab logic (Games vs Futures depending on content availability) must handle edge cases&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;Sticky tabs during scroll keep navigation accessible throughout long content lists&quot;,
+        &quot;Smart default (Games if fixtures, Futures if pre-tournament) prevents empty state confusion&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;Animated LIVE badge on Games tab when matches are in progress&quot;,
+        &quot;Onboarding tooltip for first-time visitors explaining Futures tab value proposition&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: page_view (page_type: \&quot;world_cup_hub\&quot;, active_tab: \&quot;games\&quot;)&quot;,
+        &quot;Mixpanel: Bounce rate from hub; time on page; tab click distribution (Dashboard Metric #2)&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD2: Development &amp; Accomplishment — feels in control with clearly organized, accessible content&quot;,
+        &quot;CD4: Ownership &amp; Possession — this is their dedicated World Cup destination&quot;,
+        &quot;CD7: Unpredictability &amp; Curiosity — curious about live odds, match listings, and futures all at once&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Exploration&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step2-hub.png&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;Step 3a: Browse Games Section&quot;,
+      &quot;branch&quot;: &quot;games&quot;,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist), Maria (Soccer-First Bettor)&quot;,
+      &quot;touchpoint&quot;: &quot;World Cup Hub — Games tab&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step3a-games.png&quot;,
+      &quot;description&quot;: &quot;The user browses World Cup fixtures with live matches shown first, followed by upcoming matches sorted chronologically. Each event row displays primary markets directly (2-way/3-way), plus alternative and auxiliary markets consolidated in the same row. No duplicate entries for the same fixture. SGP icon visible on eligible upcoming matches. User can bet directly from the row or tap into a full fixture page.&quot;,
+      &quot;player_goal&quot;: &quot;Find the right match and market quickly — no duplicate rows, no fragmented entry points&quot;,
+      &quot;business_goal&quot;: &quot;Maximize direct selection rate from hub; drive SGP icon engagement; capture live bets during in-progress matches&quot;,
+      &quot;player_action_description&quot;: &quot;User scans the fixture list, spots live matches at the top, evaluates inline markets, and either adds a selection or navigates to a fixture page&quot;,
+      &quot;player_emotions&quot;: &quot;Engaged and efficient — clean list, no duplicate confusion, live matches immediately visible&quot;,
+      &quot;success_criteria&quot;: &quot;User adds a selection or navigates to fixture page within 3 clicks of arriving at Games tab&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Sees live matches first with red LIVE badge, real-time score, and live odds&quot;,
+        &quot;Scrolls to upcoming fixtures sorted by kick-off time&quot;,
+        &quot;Spots SGP icon on eligible upcoming matches&quot;,
+        &quot;Clicks odds button directly from event row to add selection to betslip&quot;,
+        &quot;OR taps event row (outside odds/SGP area) to navigate to full fixture page&quot;,
+        &quot;OR clicks SGP icon to open Same Game Parlay builder&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;Dense fixture list during group stage (48 matches) may require extensive scrolling without round filters&quot;,
+        &quot;Alternative market labels (e.g., \&quot;Spread 1.5\&quot;, \&quot;Total 2.5\&quot;) may confuse casual bettors&quot;,
+        &quot;Odds suspension during live events temporarily blocks selections — users see grey buttons with no clear explanation&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;Group stage round filter (\&quot;Round 1\&quot;, \&quot;Round of 16\&quot;) reduces scrolling in dense fixture lists&quot;,
+        &quot;Tooltip or label on alternative market columns for casual bettor comprehension&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;Live match count badge on Games tab showing number of in-progress matches&quot;,
+        &quot;Group Stage quick-filter chips to jump between tournament rounds&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: selection_added (bet_context: \&quot;hub_games_section\&quot;)&quot;,
+        &quot;BEAT: element_interaction (element_type: \&quot;event_card\&quot;, element_name: fixture name)&quot;,
+        &quot;BEAT: sgp_builder_opened (from hub Games section)&quot;,
+        &quot;Mixpanel: Hub view → Selection added conversion rate; SGP Conversion Rate (Dashboard Metric #4, #7a)&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD2: Development &amp; Accomplishment — making smart choices with all data visible in one clean list&quot;,
+        &quot;CD3: Empowerment of Creativity — building bet strategy using SGP icon and inline market comparison&quot;,
+        &quot;CD4: Ownership &amp; Possession — adding selections and building betslip feels like claiming a position&quot;,
+        &quot;CD6: Scarcity &amp; Impatience — live game is in progress; must decide and bet before odds move&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Exploration&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step3a-games.png&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;Step 3b: Browse Futures Section&quot;,
+      &quot;branch&quot;: &quot;futures&quot;,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist — tournament winner bet), Maria (Soccer-First Bettor — top scorer, group winners)&quot;,
+      &quot;touchpoint&quot;: &quot;World Cup Hub — Futures tab&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step3b-futures.png&quot;,
+      &quot;description&quot;: &quot;The user clicks the Futures tab to explore long-term tournament betting markets. Markets are organized by group (Tournament Winner, Top Goalscorer, Group Winners, To Reach Final, etc.) with \&quot;All\&quot; selected by default. Selection lists with 20+ options use expandable \&quot;Show More\&quot; to keep the view clean. Deep-link URLs with ?group= parameter allow direct access to specific markets via bookmarks or shared links.&quot;,
+      &quot;player_goal&quot;: &quot;Evaluate futures markets for the tournament in an organized, dedicated space — not buried in a generic nav hierarchy&quot;,
+      &quot;business_goal&quot;: &quot;Drive high-margin futures handle; capture early-tournament revenue before odds compress; establish futures as a first-class product&quot;,
+      &quot;player_action_description&quot;: &quot;User clicks Futures tab, scans market groups, selects a filter group, expands a market, and adds a futures selection to betslip&quot;,
+      &quot;player_emotions&quot;: &quot;Exploratory and strategic — feels like a dedicated futures destination, not a buried afterthought&quot;,
+      &quot;success_criteria&quot;: &quot;User finds and evaluates at least 2 futures markets within 60 seconds of clicking Futures tab&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Clicks Futures tab from Hub&quot;,
+        &quot;Sees \&quot;All\&quot; group selected by default with all futures markets in backoffice-defined order&quot;,
+        &quot;Clicks a group filter (e.g., \&quot;Tournament Winner\&quot;) to narrow view&quot;,
+        &quot;Expands collapsible market with 20+ selections using \&quot;Show More\&quot;&quot;,
+        &quot;Checks market info icon (e.g., \&quot;Must play for action\&quot;)&quot;,
+        &quot;Clicks odds button (e.g., \&quot;Brazil +400\&quot;) to add to betslip&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;Tournament Winner market with 32 teams is long even with Show More&quot;,
+        &quot;Futures cannot be combined with fixture lines in parlays — may surprise users who try&quot;,
+        &quot;Market info icon (must play for action rules) is easy to miss for casual bettors&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;Group filter chips enable instant navigation to preferred futures category&quot;,
+        &quot;Deep-link URL (?group=tournament-winner) enables sharing specific markets via social or email&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;\&quot;Line Movement\&quot; indicator showing whether odds have moved up or down in last 24 hours&quot;,
+        &quot;Favorites save button to bookmark futures selections for later comparison&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: page_view (page_type: \&quot;world_cup_hub\&quot;, active_tab: \&quot;futures\&quot;)&quot;,
+        &quot;BEAT: selection_added (is_outright: true, league: \&quot;fifa-world-cup-2026\&quot;)&quot;,
+        &quot;Mixpanel: Futures Handle Share (KR2.2); Futures tab views / total hub views (Dashboard Metric #2)&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD4: Ownership &amp; Possession — wants to claim a long-term position on the tournament outcome&quot;,
+        &quot;CD7: Unpredictability &amp; Curiosity — intrigued by exploring all futures possibilities in one organized place&quot;,
+        &quot;CD2: Development &amp; Accomplishment — feels like a smart bettor capturing early value before odds shorten&quot;,
+        &quot;CD8: Loss &amp; Avoidance — fears missing favorable odds before they compress as tournament approaches&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Exploration&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step3b-futures.png&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;Step 4: View Fixture Page&quot;,
+      &quot;branch&quot;: null,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist), Maria (Soccer-First Bettor)&quot;,
+      &quot;touchpoint&quot;: &quot;Fixture Specific Page — upcoming or live (/sportsbook/.../fixture/ID)&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step4-fixture.png&quot;,
+      &quot;description&quot;: &quot;User taps an event row from the Games section and lands on the Fixture Specific Page for a specific match. The page displays all markets organized in groups (All Markets, Parlay Builder), supports the SGP iFrame builder, and shows alternative/auxiliary markets within the standard template. Breadcrumb routes back to /sportsbook/world-cup-hub/ — not the generic league path — keeping the user in the hub context.&quot;,
+      &quot;player_goal&quot;: &quot;See the full market depth for a specific match and build the best possible bet&quot;,
+      &quot;business_goal&quot;: &quot;Maximize market selection depth per session; drive SGP adoption; keep users in hub context via breadcrumb&quot;,
+      &quot;player_action_description&quot;: &quot;User browses market groups, adds selections to betslip, and optionally opens Parlay Builder for SGP&quot;,
+      &quot;player_emotions&quot;: &quot;Focused and in control — full market depth available, clear breadcrumb back to hub, SGP easily accessible&quot;,
+      &quot;success_criteria&quot;: &quot;User adds at least one selection or opens Parlay Builder within 2 minutes of landing on fixture page&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Clicks event row from Hub Games section&quot;,
+        &quot;Lands on fixture page with breadcrumb showing \&quot;World Cup Hub\&quot; (routes back to hub)&quot;,
+        &quot;Browses All Markets tab (Main, Goalscorer, Totals, etc.)&quot;,
+        &quot;Clicks odds button to add selection to betslip&quot;,
+        &quot;OR clicks Parlay Builder tab and scrolls to SGP iFrame to build a Same Game Parlay&quot;,
+        &quot;Taps breadcrumb to return to hub with session intact&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;Dense market list on mobile requires extensive scrolling; no jump-to-section nav&quot;,
+        &quot;SGP available only for upcoming fixtures — live fixture Parlay Builder tab not supported in initial release&quot;,
+        &quot;Second half markets (half-time feature) are nice-to-have and not guaranteed in first release&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;Breadcrumb routing to World Cup Hub (vs generic league page) keeps user in hub funnel&quot;,
+        &quot;Parlay Builder tab placement makes SGP discoverable without requiring SGP icon knowledge&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;Market group sticky side-nav or jump links for long market lists on mobile&quot;,
+        &quot;\&quot;Popular bets for this match\&quot; section surfacing most-selected markets by other users&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: page_view (page_type: \&quot;fixture_page_upcoming\&quot; or \&quot;fixture_page_live\&quot;, fixture_id, fixture_name)&quot;,
+        &quot;BEAT: sgp_builder_opened (fixture_id, fixture_name)&quot;,
+        &quot;Mixpanel: Hub → Fixture → Selection → Bet placement funnel (Dashboard Metric #7a)&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD3: Empowerment of Creativity — building complex bets from full market depth feels strategic&quot;,
+        &quot;CD4: Ownership &amp; Possession — building their personal bet strategy selection by selection&quot;,
+        &quot;CD6: Scarcity &amp; Impatience — live markets moving; must decide before odds shift&quot;,
+        &quot;CD2: Development &amp; Accomplishment — navigating all markets feels like expert behavior&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Bet Placement &amp; Live Engagement&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step4-fixture.png&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;Step 5: Live Transition — Upcoming to Live&quot;,
+      &quot;branch&quot;: null,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist), Maria (Soccer-First Bettor)&quot;,
+      &quot;touchpoint&quot;: &quot;Fixture Specific Page — automatic redirect from upcoming to live&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step5-transition.png&quot;,
+      &quot;description&quot;: &quot;While browsing an upcoming fixture page, the match kicks off. The system detects the status change within 5 seconds, fires the upcoming_live_redirection tracking event, and displays a live availability notification with a CTA. User clicks the CTA and lands on the live fixture page with LIVE badge, real-time score, and live markets — session, balance, and betslip fully preserved. No manual searching required.&quot;,
+      &quot;player_goal&quot;: &quot;Continue betting on the match seamlessly the moment it goes live — without losing context or betslip&quot;,
+      &quot;business_goal&quot;: &quot;Capture live betting engagement at kickoff — the highest-value betting moment; measure KR3.1 Live Engagement Rate&quot;,
+      &quot;player_action_description&quot;: &quot;User sees the transition notification, clicks the CTA, and continues betting on live markets without friction&quot;,
+      &quot;player_emotions&quot;: &quot;Seamlessly engaged — zero friction, arrives on live page with betslip intact and ready to bet immediately&quot;,
+      &quot;success_criteria&quot;: &quot;User arrives on live page within 5 seconds of kickoff; betslip preserved; user adds live selection within 5 minutes (KR3.1 target)&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Was browsing upcoming fixture page before kickoff&quot;,
+        &quot;System detects match start within 5 seconds; displays live availability notification&quot;,
+        &quot;User clicks \&quot;OK, Got It\&quot; CTA&quot;,
+        &quot;Lands on live fixture page with LIVE badge, current score 0-0, and live markets&quot;,
+        &quot;Continues placing bets without searching for the live match&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;If live fixture ID mapping is unavailable, fallback message routes user to hub Games section — 1-2 extra clicks&quot;,
+        &quot;Pre-match betslip selections placed after wager cutoff will fail — user needs clear error message&quot;,
+        &quot;5-second detection window means brief delay between real kickoff and notification appearance&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;upcoming_live_redirection tracking event enables direct OKR measurement (KR3.1)&quot;,
+        &quot;\&quot;About to start\&quot; pre-warning at 5 minutes to kickoff reduces surprise when redirect fires&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;Countdown timer on upcoming fixture page for final minutes before kickoff&quot;,
+        &quot;Pre-fill stake amount after redirect so user can place live bet with one tap&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: upcoming_live_redirection (fixture_id, live_fixture_id, fixture_name, current_url, redirection_url)&quot;,
+        &quot;BEAT: selection_added within 5 min of redirection event (defines KR3.1 engaged cohort)&quot;,
+        &quot;Mixpanel: Live Transition Conversion Rate (Dashboard Metric #5); KR3.1 Live Engagement Rate&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD6: Scarcity &amp; Impatience — live odds are moving right now; the betting window is open&quot;,
+        &quot;CD7: Unpredictability &amp; Curiosity — in-play moment is thrilling; what happens on the first goal?&quot;,
+        &quot;CD8: Loss &amp; Avoidance — without the redirect would have missed the live betting window entirely&quot;,
+        &quot;CD2: Development &amp; Accomplishment — feels in control; didn't miss the live opportunity&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Bet Placement &amp; Live Engagement&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step5-transition.png&quot;
+      ]
+    },
+    {
+      &quot;name&quot;: &quot;Step 6: Place Bet via Betslip&quot;,
+      &quot;branch&quot;: null,
+      &quot;persona&quot;: &quot;Alex (World Cup Opportunist), Maria (Soccer-First Bettor), Jason (Casual Group Bettor)&quot;,
+      &quot;touchpoint&quot;: &quot;Betslip — persistent component across all hub pages and fixture pages&quot;,
+      &quot;screenshot&quot;: &quot;screenshots/wc-step6-betslip.png&quot;,
+      &quot;description&quot;: &quot;User has added selections from Hub Games, Futures, and/or Fixture Pages. The betslip automatically determines bet type (Straight, Parlay, Live Parlay, SGP, Combo SGP), calculates potential payout dynamically, and enables placement. All selections persist across navigation within the hub. After placement, bet appears in Bet History under Pending Bets.&quot;,
+      &quot;player_goal&quot;: &quot;Place their chosen bet accurately and quickly — correct selections, correct stake, zero rejections&quot;,
+      &quot;business_goal&quot;: &quot;Maximize bet placement completion rate; drive multi-leg adoption (SGP, Parlay, Combo SGP); measure KR3.2 Acceptance Rate&quot;,
+      &quot;player_action_description&quot;: &quot;User reviews betslip, enters stake, confirms bet, and receives placement confirmation — then checks Bet History&quot;,
+      &quot;player_emotions&quot;: &quot;Excited and decisive — clear payout display, intuitive stake entry, and fast confirmation&quot;,
+      &quot;success_criteria&quot;: &quot;Bet placed successfully within 30 seconds of betslip open; acceptance rate at or above 90% (KR3.2)&quot;,
+      &quot;user_actions&quot;: [
+        &quot;Reviews betslip selections (selection name, match, odds, bet type)&quot;,
+        &quot;Notes automatic bet type assignment (e.g., Straight → Parlay when 2nd selection added)&quot;,
+        &quot;Enters stake amount&quot;,
+        &quot;Reviews potential payout&quot;,
+        &quot;Clicks \&quot;Place Bet\&quot;&quot;,
+        &quot;Receives confirmation; bet appears in Bet History → Pending Bets&quot;
+      ],
+      &quot;pain_points&quot;: [
+        &quot;Odds changes between selection and placement cause rejection — users must re-accept new odds&quot;,
+        &quot;Mobile keyboard obscures betslip stake input on small screens&quot;,
+        &quot;Futures cannot be combined with fixture selections in parlays — users who try receive unhelpful error&quot;,
+        &quot;Live bet placement speed is sensitive to network latency; mobile 4G users may experience rejections&quot;
+      ],
+      &quot;opportunities&quot;: [
+        &quot;Real-time odds change indicator in betslip before placement reduces surprise rejections&quot;,
+        &quot;Quick-stake buttons ($10/$25/$50/$100) eliminate mobile keyboard friction&quot;,
+        &quot;\&quot;Accept Odds Changes\&quot; preference setting reduces rejection rate and improves KR3.2&quot;
+      ],
+      &quot;ideas&quot;: [
+        &quot;Instant bet confirmation animation reinforces placement success moment&quot;,
+        &quot;Post-placement CTA linking directly to live match tracker for the bet just placed&quot;
+      ],
+      &quot;data_sources&quot;: [
+        &quot;BEAT: bet_placement_selection (bet_type, stake_amount, status, league, is_outright)&quot;,
+        &quot;BEAT: bet_placed (bet_id, num_selections, bet_type, stake_amount)&quot;,
+        &quot;Mixpanel: Hub Conversion Rate (KR1.2); Bet Acceptance Rate (KR3.2); Bet Type Distribution (Dashboard #6); SGP Adoption Rate (KR2.1)&quot;
+      ],
+      &quot;octalysis_drives&quot;: [
+        &quot;CD7: Unpredictability &amp; Curiosity — anticipation of match outcome starts the moment bet is placed&quot;,
+        &quot;CD4: Ownership &amp; Possession — the bet is now officially theirs; they have a stake in the tournament&quot;,
+        &quot;CD6: Scarcity &amp; Impatience — wants to lock in before live odds move further&quot;,
+        &quot;CD8: Loss &amp; Avoidance — fear of rejection or odds change at the confirmation moment&quot;,
+        &quot;CD2: Development &amp; Accomplishment — placing the bet is the completed goal of the entire journey&quot;
+      ],
+      &quot;screenshots&quot;: [],
+      &quot;phase&quot;: &quot;Bet Placement &amp; Live Engagement&quot;,
+      &quot;_screenshots&quot;: [
+        &quot;screenshots/wc-step6-betslip.png&quot;
+      ]
+    }
+  ]
+}</pre></body></html>
