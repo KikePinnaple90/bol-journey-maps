@@ -15,7 +15,9 @@
 
 - persona: Recreational Punter
 - touchpoint: Homepage
-- screenshot: screenshots/find-a-line-for-a-league-step1-homepage.png
+- screenshots:
+  - screenshots/find-a-line-for-a-league-step1-homepage.png
+  - screenshots/find-a-line-for-a-league-step1-homepage-mobile.png
 - description: The user arrives at BetOnline/sportsbook after deciding they want to bet on a specific league (e.g. World Cup). They orient themselves on the homepage.
 - player_goal: Quickly find the league they have in mind and see available betting options
 - business_goal: Minimize time-to-first-bet; surface the most popular leagues prominently
