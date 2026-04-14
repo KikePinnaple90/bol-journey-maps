@@ -631,7 +631,6 @@ function textSection(title, val) {
 
 function openPanel(idx) {
   const s = JOURNEY.steps[idx];
-  const ec = emotionColor(s.emotion_score);
   panelBody.innerHTML = `
     <div class="panel-step-name">${s.name}</div>
     <div class="panel-phase">${s.phase || ''}${s.touchpoint ? ' · ' + s.touchpoint : ''}</div>
@@ -695,7 +694,7 @@ document.getElementById('btn-export').addEventListener('click', () => {
     md += `### ${s.name}\n\n`;
     if (s.persona)        md += `**Persona:** ${s.persona}  \n`;
     if (s.touchpoint)     md += `**Touchpoint:** ${s.touchpoint}  \n`;
-    if (s.emotion_score)  md += `**Emotion Score:** ${s.emotion_score}/10  \n`;
+    if (s.octalysis_drives?.length) md += `**Drives:** ${s.octalysis_drives.join(', ')}  \n`;
     md += `\n`;
     if (s.description)    md += `**Description:** ${s.description}\n\n`;
     if (s.player_goal)    md += `**Player Goal:** ${s.player_goal}\n\n`;
