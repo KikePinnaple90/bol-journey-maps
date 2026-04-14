@@ -18,6 +18,7 @@
 - screenshots:
   - screenshots/find-a-line-for-a-league-step1-homepage.png
   - screenshots/find-a-line-for-a-league-step1-homepage-mobile.png
+
 - description: The user arrives at BetOnline/sportsbook after deciding they want to bet on a specific league (e.g. World Cup). They orient themselves on the homepage.
 - player_goal: Quickly find the league they have in mind and see available betting options
 - business_goal: Minimize time-to-first-bet; surface the most popular leagues prominently
@@ -49,7 +50,9 @@
 
 - persona: Recreational Punter
 - touchpoint: Left nav / top nav Popular leagues only in mobile
-- screenshot: screenshots/step2-sport-nav.png
+- screenshots:
+  - screenshots/find-a-line-for-a-league-step2-navigate to league.png
+  - screenshots/find-a-line-for-a-league-step2-select a league-mobile.png
 - description: The user clicks on the sport (e.g. Football / Soccer) from the left nav or top menu. They expand the sport that lists available leagues.
 - player_goal: Get one level closer to their target league
 - business_goal: Keep the funnel moving; reduce drop-off between sport and league selection
@@ -84,7 +87,7 @@
 
 - persona: Recreational Punter, Sharp
 - touchpoint: League entry point (left nav item or top popular leaguesin mobile)
-- screenshot: screenshots/step3-league-select.png
+- screenshot: screenshots/find-a-line-for-a-league-step3-league-select.png
 - description: The user clicks on their target league (e.g. NFL, Premier League). This is the critical decision point — the product currently routes them to either Pre-match OR Live, not a unified league hub. Sometimes even for same prematch league content they are multie entry points and outrights are separated
 - player_goal: See all available betting options for this league in one place
 - business_goal: Route user to the highest-value market (live if game is in progress; pre-match if not)
@@ -125,8 +128,8 @@
 - persona: Recreational Punter, Sharp
 - touchpoint: Pre-match Sportsbook — League view
 - screenshots:
-  - screenshots/step3-league-select.png
-  - screenshots/step4a-prematch.png
+  - screenshots/find-a-line-for-a-league-step4-browse prematch-desktop.png
+  - screenshots/find-a-line-for-a-league-step4-browse prematch-mobile.png
 - description: The user is on the pre-match league page. They browse upcoming games and available markets.
 - player_goal: Find the game and market they want to bet on before it starts
 - business_goal: Maximize pre-match handle; encourage multi-game/parlay selection
@@ -165,7 +168,9 @@
 
 - persona: Recreational Punter, Sharp
 - touchpoint: Live Betting section — League filter
-- screenshot: screenshots/step4b-live.png
+- screenshots:
+  - screenshots/find-a-line-for-a-league-step5-browse live-desktop.png
+  - screenshots/find-a-line-for-a-league-step5-browse live-mobile.png
 - description: The user is looking for in-play betting on their league. They must navigate to the separate Live Betting section and then filter by sport and find the league — there is no direct path from the league page to live markets.
 - player_goal: Find an in-play market on a specific league's game quickly
 - business_goal: Capture live handle; live bettors are high-value, time-sensitive
@@ -204,7 +209,10 @@
 
 - persona: Sharp, Recreational Punter (seasonal)
 - touchpoint: Outrights / Futures section (separate from main sportsbook)
-- screenshot: screenshots/step4c-outrights.png
+- screenshots:
+  - screenshots/find-a-line-for-a-league-step6-browse outrights-desktop.png
+  - screenshots/find-a-line-for-a-league-step6-browse outrights-mobile1.png
+  - screenshots/find-a-line-for-a-league-step6-browse outrights-mobile2.png
 - description: The user wants to place a futures/outright bet (e.g. NFL Super Bowl winner, PL top scorer). Outrights are currently housed in a separate section with no link from the league page.
 - player_goal: Find the best available futures market for their league and evaluate the odds
 - business_goal: Drive futures handle; futures bets have long lock-in periods that benefit the book
