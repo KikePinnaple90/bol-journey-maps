@@ -122,7 +122,9 @@
 
 - persona: Recreational Punter, Sharp
 - touchpoint: Pre-match Sportsbook — League view
-- screenshot: screenshots/step4a-prematch.png
+- screenshots:
+  - screenshots/step3-league-select.png
+  - screenshots/step4a-prematch.png
 - description: The user is on the pre-match league page. They browse upcoming games and available markets.
 - player_goal: Find the game and market they want to bet on before it starts
 - business_goal: Maximize pre-match handle; encourage multi-game/parlay selection

@@ -91,6 +91,7 @@ function parseStep(block) {
     ideas:             parseBulletField(lines, 'ideas'),
     data_sources:      parseBulletField(lines, 'data_sources'),
     octalysis_drives:  parseBulletField(lines, 'octalysis_drives'),
+    screenshots:       parseBulletField(lines, 'screenshots'),
   };
 }
 
@@ -528,7 +529,8 @@ function buildDetailPanel() {
 <aside id="detail-panel">
   <button id="panel-close" aria-label="Close">✕</button>
   <div id="panel-content"></div>
-</aside>`;
+</aside>
+<div class="ss-lightbox" id="ss-lightbox"><img id="ss-lightbox-img" src="" alt="" /></div>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -875,16 +877,71 @@ body {
 .pdc-hat  { font-size: 10px; border-radius: 3px; padding: 1px 5px; flex-shrink: 0; }
 .white-hat-badge { background: #dcfce7; color: #16a34a; }
 .black-hat-badge { background: #fee2e2; color: #dc2626; }
+
+/* ── Screenshots in detail panel ─────────────────────── */
+.panel-screenshots {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 18px;
+  padding-bottom: 4px;
+}
+.panel-screenshot {
+  flex-shrink: 0;
+  max-height: 260px;
+  width: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: zoom-in;
+  transition: transform 0.2s;
+}
+.panel-screenshot:hover { transform: scale(1.02); }
+.panel-screenshot-missing {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  min-width: 120px;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  font-size: 11px;
+  color: #94a3b8;
+  padding: 8px;
+  text-align: center;
+}
+/* Lightbox overlay for zoomed screenshot */
+.ss-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+.ss-lightbox.open { display: flex; }
+.ss-lightbox img {
+  max-height: 92vh;
+  max-width: 92vw;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
 `;
 }
 
 // ---------------------------------------------------------------------------
 // Inline JS (interactivity — no external libraries)
 // ---------------------------------------------------------------------------
-function buildJS(journey) {
+function buildJS(journey, screenshotMap = {}) {
   const data = JSON.stringify(journey);
+  const ssData = JSON.stringify(screenshotMap);
   return `
 const JOURNEY = ${data};
+const SCREENSHOTS = ${ssData};
 
 // ── View toggle ──────────────────────────────────────
 const btnFlow  = document.getElementById('btn-flow');
@@ -934,9 +991,17 @@ function textSection(title, val) {
 
 function openPanel(idx) {
   const s = JOURNEY.steps[idx];
+  const ssKeys = s._screenshots || (s.screenshot ? [s.screenshot] : []);
+  const ssHTML = ssKeys.length ? \`<div class="panel-screenshots">\${
+    ssKeys.map(k => SCREENSHOTS[k]
+      ? \`<img class="panel-screenshot" src="\${SCREENSHOTS[k]}" alt="\${k}" data-src="\${SCREENSHOTS[k]}" />\`
+      : \`<div class="panel-screenshot-missing">\${k.split('/').pop()}</div>\`
+    ).join('')
+  }</div>\` : '';
   panelBody.innerHTML = \`
     <div class="panel-step-name">\${s.name}</div>
     <div class="panel-phase">\${s.phase || ''}\${s.touchpoint ? ' · ' + s.touchpoint : ''}</div>
+    \${ssHTML}
     \${s.octalysis_drives && s.octalysis_drives.length ? \`
     <div class="panel-drives">
       \${s.octalysis_drives.map(d => {
@@ -974,6 +1039,20 @@ function openPanel(idx) {
 panelClose.addEventListener('click', () => {
   panel.classList.remove('open');
   document.querySelectorAll('.step-node').forEach(n => n.classList.remove('selected'));
+});
+
+// ── Screenshot lightbox ───────────────────────────────
+const lightbox    = document.getElementById('ss-lightbox');
+const lightboxImg = document.getElementById('ss-lightbox-img');
+panelBody.addEventListener('click', e => {
+  const img = e.target.closest('.panel-screenshot');
+  if (!img) return;
+  lightboxImg.src = img.dataset.src;
+  lightbox.classList.add('open');
+});
+lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') lightbox.classList.remove('open');
 });
 
 // Attach click handlers to SVG nodes and emotion dots
@@ -1028,16 +1107,45 @@ document.getElementById('btn-export').addEventListener('click', () => {
 }
 
 // ---------------------------------------------------------------------------
+// Screenshot embedding — reads image files and converts to base64 data URIs
+// ---------------------------------------------------------------------------
+function collectScreenshots(journey) {
+  const map = {};
+  for (const step of journey.steps) {
+    // Normalise: use `screenshots` list if present, fall back to single `screenshot`
+    const paths = step.screenshots && step.screenshots.length
+      ? step.screenshots
+      : step.screenshot ? [step.screenshot] : [];
+    // Store resolved list back on step for the JS template
+    step._screenshots = paths;
+    for (const p of paths) {
+      if (p in map) continue;
+      const fullPath = path.join(__dirname, p);
+      if (fs.existsSync(fullPath)) {
+        const ext = path.extname(p).slice(1).toLowerCase();
+        const mime = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg'
+                   : ext === 'webp' ? 'image/webp' : 'image/png';
+        map[p] = `data:${mime};base64,${fs.readFileSync(fullPath).toString('base64')}`;
+      } else {
+        map[p] = null; // file not found — panel shows placeholder
+      }
+    }
+  }
+  return map;
+}
+
+// ---------------------------------------------------------------------------
 // Assemble full HTML page
 // ---------------------------------------------------------------------------
 function buildPageHTML(journey) {
+  const screenshotMap = collectScreenshots(journey);
   const flowSVG       = buildFlowSVG(journey);
   const emotionSVG    = buildDriveTimeline(journey);
   const tableView     = buildTableView(journey);
   const phaseBanner   = buildPhaseBanner(journey);
   const detailPanel   = buildDetailPanel();
   const css           = buildCSS();
-  const js            = buildJS(journey);
+  const js            = buildJS(journey, screenshotMap);
 
   return `<!DOCTYPE html>
 <html lang="en">
