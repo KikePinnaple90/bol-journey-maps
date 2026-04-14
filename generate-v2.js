@@ -931,6 +931,65 @@ ${detPanel}
 </html>`;
 }
 
+// ─── Markdown export ─────────────────────────────────────────────────────────
+
+function buildMarkdown(journey) {
+  const list = (items) => (items && items.length) ? items.map(i => `- ${i}`).join('\n') : '_None_';
+
+  let md = `# Journey: ${journey.title}\n`;
+  md += `**id:** ${journey.id}  \n`;
+  md += `**product:** ${journey.product}  \n`;
+  md += `**last_updated:** ${journey.last_updated}  \n`;
+  md += `\n> ${journey.description}\n\n---\n\n`;
+
+  let currentPhase = null;
+  journey.steps.forEach((s, i) => {
+    if (s.phase !== currentPhase) {
+      currentPhase = s.phase;
+      const phase = journey.phases.find(p => p.name === currentPhase);
+      md += `## Phase: ${currentPhase}\n`;
+      if (phase && phase.guiding_question) md += `_${phase.guiding_question}_\n`;
+      md += '\n';
+    }
+
+    const cleanName = s.name.replace(/^Step \d+[a-z]*:\s*/i, '');
+    md += `### Step ${i + 1}: ${cleanName}`;
+    if (s.branch && !s.branch.includes('|')) md += ` _(${s.branch})_`;
+    md += '\n\n';
+
+    if (s.persona)    md += `**Persona:** ${s.persona}  \n`;
+    if (s.touchpoint) md += `**Touchpoint:** ${s.touchpoint}  \n`;
+    if (s.player_emotions) md += `**Emotion:** ${s.player_emotions}  \n`;
+    md += '\n';
+
+    if (s.description) md += `${s.description}\n\n`;
+
+    md += `**Player Goal:** ${s.player_goal || '—'}  \n`;
+    md += `**Business Goal:** ${s.business_goal || '—'}  \n`;
+    md += `**Success Criteria:** ${s.success_criteria || '—'}  \n\n`;
+
+    if (s.pain_points && s.pain_points.length) {
+      md += `#### Pain Points\n${list(s.pain_points)}\n\n`;
+    }
+    if (s.opportunities && s.opportunities.length) {
+      md += `#### Opportunities\n${list(s.opportunities)}\n\n`;
+    }
+    if (s.ideas && s.ideas.length) {
+      md += `#### Ideas\n${list(s.ideas)}\n\n`;
+    }
+    if (s.octalysis_drives && s.octalysis_drives.length) {
+      md += `#### Octalysis Drives\n${list(s.octalysis_drives)}\n\n`;
+    }
+    if (s.data_sources && s.data_sources.length) {
+      md += `#### Data Sources\n${list(s.data_sources)}\n\n`;
+    }
+
+    md += '---\n\n';
+  });
+
+  return md;
+}
+
 // ─── CLI runner ─────────────────────────────────────────────────────────────
 
 function run() {
@@ -979,9 +1038,21 @@ function run() {
       console.error(`FAILED\n  ${err.message}`);
       process.exit(1);
     }
+
+    const mdFile = path.join(OUTPUT_DIR, `${journey.slug}-v2.md`);
+    process.stdout.write(`Building ${journey.slug}-v2.md  ... `);
+    try {
+      const md = buildMarkdown(journey);
+      fs.writeFileSync(mdFile, md, 'utf8');
+      const size = (fs.statSync(mdFile).size / 1024).toFixed(1);
+      console.log(`OK  → output/${journey.slug}-v2.md   (${size} KB)`);
+    } catch (err) {
+      console.error(`FAILED\n  ${err.message}`);
+      process.exit(1);
+    }
   }
 
-  console.log('\nOpen in your browser — no server needed.');
+  console.log('\nOpen HTML in your browser — no server needed.');
 }
 
 run();
