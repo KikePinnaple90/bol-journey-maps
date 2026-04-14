@@ -84,13 +84,13 @@ function parseStep(block) {
     player_action_description: parseField(lines, 'player_action_description'),
     player_emotions:          parseField(lines, 'player_emotions'),
     success_criteria:         parseField(lines, 'success_criteria'),
-    emotion_score:            Number(parseField(lines, 'emotion_score')) || null,
     // Bullet list fields
-    user_actions:   parseBulletField(lines, 'user_actions'),
-    pain_points:    parseBulletField(lines, 'pain_points'),
-    opportunities:  parseBulletField(lines, 'opportunities'),
-    ideas:          parseBulletField(lines, 'ideas'),
-    data_sources:   parseBulletField(lines, 'data_sources'),
+    user_actions:      parseBulletField(lines, 'user_actions'),
+    pain_points:       parseBulletField(lines, 'pain_points'),
+    opportunities:     parseBulletField(lines, 'opportunities'),
+    ideas:             parseBulletField(lines, 'ideas'),
+    data_sources:      parseBulletField(lines, 'data_sources'),
+    octalysis_drives:  parseBulletField(lines, 'octalysis_drives'),
   };
 }
 
@@ -176,13 +176,31 @@ function esc(str) {
     .replace(/"/g, '&quot;');
 }
 
-// Emotion score → colour (red=low, amber=mid, green=high)
-function emotionColor(score) {
-  if (score === null) return '#cbd5e1';
-  if (score <= 3) return '#f87171';
-  if (score <= 5) return '#fb923c';
-  if (score <= 7) return '#facc15';
-  return '#4ade80';
+// ---------------------------------------------------------------------------
+// Octalysis drive definitions
+// ---------------------------------------------------------------------------
+const OCTALYSIS = {
+  CD1: { name: 'Epic Meaning & Calling',          hat: 'white', color: '#6366f1', short: 'CD1' },
+  CD2: { name: 'Development & Accomplishment',    hat: 'white', color: '#22c55e', short: 'CD2' },
+  CD3: { name: 'Empowerment of Creativity',       hat: 'white', color: '#a855f7', short: 'CD3' },
+  CD4: { name: 'Ownership & Possession',          hat: 'white', color: '#14b8a6', short: 'CD4' },
+  CD5: { name: 'Social Influence & Relatedness',  hat: 'white', color: '#f59e0b', short: 'CD5' },
+  CD6: { name: 'Scarcity & Impatience',           hat: 'black', color: '#f97316', short: 'CD6' },
+  CD7: { name: 'Unpredictability & Curiosity',    hat: 'black', color: '#06b6d4', short: 'CD7' },
+  CD8: { name: 'Loss & Avoidance',                hat: 'black', color: '#ef4444', short: 'CD8' },
+};
+
+// Parse drive code from a string like "CD6: Scarcity & Impatience — ..."
+function parseDriveCode(str) {
+  const m = str.match(/^(CD[1-8])/i);
+  return m ? m[1].toUpperCase() : null;
+}
+
+// Get primary drive color for a step (first drive listed)
+function stepDriveColor(step) {
+  if (!step.octalysis_drives || step.octalysis_drives.length === 0) return '#cbd5e1';
+  const code = parseDriveCode(step.octalysis_drives[0]);
+  return code && OCTALYSIS[code] ? OCTALYSIS[code].color : '#cbd5e1';
 }
 
 // Phase header colour cycling
@@ -331,7 +349,7 @@ function buildFlowSVG(journey) {
   const nodesSVG = nodes.map(n => {
     const x  = n.x + PADX;
     const y  = n.y + PADY;
-    const ec = emotionColor(n.step.emotion_score);
+    const ec = stepDriveColor(n.step);
     const label = n.step.name.replace(/^Step \d+[a-z]*:\s*/i, '');
     // Truncate long labels
     const display = label.length > 22 ? label.slice(0, 20) + '…' : label;
@@ -347,8 +365,13 @@ function buildFlowSVG(journey) {
       <text x="${x + n.w / 2}" y="${y + 28}" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">${esc(display)}</text>
-      ${n.step.emotion_score !== null
-        ? `<text x="${x + n.w - 10}" y="${y + n.h - 8}" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">${n.step.emotion_score}/10</text>`
+      ${n.step.octalysis_drives && n.step.octalysis_drives.length > 0
+        ? (() => {
+            const code = parseDriveCode(n.step.octalysis_drives[0]);
+            return code && OCTALYSIS[code]
+              ? `<text x="${x + n.w / 2}" y="${y + n.h - 8}" text-anchor="middle" font-size="9" fill="${OCTALYSIS[code].color}" font-weight="700" font-family="system-ui">${code}</text>`
+              : '';
+          })()
         : ''}
       ${branchTag}
     </g>`;
@@ -368,72 +391,52 @@ function buildFlowSVG(journey) {
 }
 
 // ---------------------------------------------------------------------------
-// Emotion curve SVG
+// Drive Timeline (replaces emotion curve)
 // ---------------------------------------------------------------------------
-function buildEmotionCurveSVG(journey) {
-  // Only steps with an emotion score, in order
-  const scored = journey.steps.filter(s => s.emotion_score !== null);
-  if (scored.length < 2) return '';
+function buildDriveTimeline(journey) {
+  const steps = journey.steps;
+  if (steps.length === 0) return '';
 
-  const W = 900;
-  const H = 130;
-  const PAD = { top: 16, right: 24, bottom: 32, left: 36 };
-  const chartW = W - PAD.left - PAD.right;
-  const chartH = H - PAD.top - PAD.bottom;
+  const cols = steps.map((s, i) => {
+    const drives = (s.octalysis_drives || []).map(d => {
+      const code = parseDriveCode(d);
+      const def  = code && OCTALYSIS[code];
+      if (!def) return null;
+      return { code, color: def.color, name: def.name, hat: def.hat };
+    }).filter(Boolean);
 
-  const xStep = chartW / (scored.length - 1);
-  const points = scored.map((s, i) => ({
-    x: PAD.left + i * xStep,
-    y: PAD.top + chartH - ((s.emotion_score / 10) * chartH),
-    step: s,
-  }));
+    const label = s.name.replace(/^Step \d+[a-z]*:\s*/i, '');
+    const abbr  = label.length > 16 ? label.slice(0, 14) + '…' : label;
 
-  const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
+    const chips = drives.map(d =>
+      `<div class="drive-chip" style="background:${d.color}22;border-color:${d.color};color:${d.color}"
+            title="${esc(d.name)}">${d.code}</div>`
+    ).join('');
 
-  // Filled area under the curve
-  const areaPath = `M${points[0].x},${PAD.top + chartH} ` +
-    points.map(p => `L${p.x},${p.y}`).join(' ') +
-    ` L${points[points.length - 1].x},${PAD.top + chartH} Z`;
+    const hatClass = drives.some(d => d.hat === 'black') && drives.some(d => d.hat === 'white')
+      ? 'hat-mixed' : drives[0] ? `hat-${drives[0].hat}` : '';
 
-  const dotsSVG = points.map(p => `
-    <circle cx="${p.x}" cy="${p.y}" r="5" fill="${emotionColor(p.step.emotion_score)}"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="${journey.steps.indexOf(p.step)}" style="cursor:pointer">
-      <title>${esc(p.step.name)} — ${p.step.emotion_score}/10</title>
-    </circle>`).join('');
-
-  // Y axis labels
-  const yLabels = [2, 4, 6, 8, 10].map(v => {
-    const y = PAD.top + chartH - ((v / 10) * chartH);
-    return `<text x="${PAD.left - 6}" y="${y + 4}" text-anchor="end" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">${v}</text>
-            <line x1="${PAD.left}" y1="${y}" x2="${W - PAD.right}" y2="${y}"
-                  stroke="#f1f5f9" stroke-width="1"/>`;
+    return `<div class="dt-col ${hatClass}" data-idx="${i}" style="cursor:pointer">
+      <div class="dt-step-label">${esc(abbr)}</div>
+      <div class="dt-chips">${chips || '<span class="no-data">—</span>'}</div>
+      <div class="dt-emotion">${esc(s.player_emotions || '')}</div>
+    </div>`;
   }).join('');
 
-  // X axis step labels (abbreviated)
-  const xLabels = points.map((p, i) => {
-    const label = scored[i].name.replace(/^Step \d+[a-z]*:\s*/i, '');
-    const abbr  = label.length > 14 ? label.slice(0, 12) + '…' : label;
-    return `<text x="${p.x}" y="${H - 4}" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">${esc(abbr)}</text>`;
-  }).join('');
+  // Legend
+  const legend = Object.entries(OCTALYSIS).map(([code, def]) =>
+    `<div class="legend-item">
+      <span class="legend-dot" style="background:${def.color}"></span>
+      <span class="legend-code" style="color:${def.color}">${code}</span>
+      <span class="legend-name">${def.name}</span>
+    </div>`
+  ).join('');
 
   return `
-<div class="emotion-wrap">
-  <div class="section-label">Emotion Curve</div>
-  <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;max-width:100%"
-       xmlns="http://www.w3.org/2000/svg">
-    ${yLabels}
-    <path d="${areaPath}" fill="#e0f2fe" opacity="0.5"/>
-    <polyline points="${polyline}" fill="none" stroke="#38bdf8" stroke-width="2"/>
-    ${dotsSVG}
-    ${xLabels}
-    <line x1="${PAD.left}" y1="${PAD.top}" x2="${PAD.left}" y2="${PAD.top + chartH}"
-          stroke="#e2e8f0" stroke-width="1"/>
-    <line x1="${PAD.left}" y1="${PAD.top + chartH}" x2="${W - PAD.right}" y2="${PAD.top + chartH}"
-          stroke="#e2e8f0" stroke-width="1"/>
-  </svg>
+<div class="drive-timeline-wrap">
+  <div class="section-label">Emotional Drive Timeline <span class="legend-hat white-hat">● White Hat</span><span class="legend-hat black-hat">● Black Hat</span></div>
+  <div class="drive-timeline">${cols}</div>
+  <div class="drive-legend">${legend}</div>
 </div>`;
 }
 
@@ -453,11 +456,11 @@ function buildTableView(journey) {
     { key: 'opportunities',            label: 'Opportunities', list: true },
     { key: 'ideas',                    label: 'Ideas', list: true },
     { key: 'data_sources',             label: 'Data Sources', list: true },
-    { key: 'emotion_score',            label: 'Emotion Score' },
+    { key: 'octalysis_drives',         label: 'Octalysis Drives', list: true },
   ];
 
   const headerCols = journey.steps.map((s, i) => {
-    const ec = emotionColor(s.emotion_score);
+    const ec = stepDriveColor(s);
     return `<th style="background:${ec}22;border-bottom:3px solid ${ec};min-width:180px">
       <span class="th-step-name">${esc(s.name)}</span>
       ${s.phase ? `<span class="th-phase">${esc(s.phase)}</span>` : ''}
@@ -634,17 +637,91 @@ body {
   stroke-width: 3;
 }
 
-/* ── Emotion curve ───────────────────────────────────── */
-.emotion-wrap {
+/* ── Drive Timeline ──────────────────────────────────── */
+.drive-timeline-wrap {
   margin-top: 32px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 16px 20px;
-  overflow-x: auto;
 }
-.emotion-dot { transition: r 0.15s; }
-.emotion-dot:hover { r: 7; }
+.legend-hat { font-size: 10px; font-weight: 500; margin-left: 12px; }
+.legend-hat.white-hat { color: #22c55e; }
+.legend-hat.black-hat { color: #ef4444; }
+.drive-timeline {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  margin-top: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.dt-col {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 10px 12px;
+  border-right: 1px solid #e2e8f0;
+  transition: background 0.15s;
+}
+.dt-col:last-child { border-right: none; }
+.dt-col:hover { background: #f8fafc; }
+.dt-col.hat-white { border-top: 3px solid #22c55e; }
+.dt-col.hat-black { border-top: 3px solid #ef4444; }
+.dt-col.hat-mixed { border-top: 3px solid #f59e0b; }
+.dt-step-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+  min-height: 24px;
+}
+.drive-chip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid;
+  cursor: default;
+}
+.dt-emotion {
+  font-size: 10px;
+  color: #64748b;
+  line-height: 1.4;
+  font-style: italic;
+}
+.drive-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.legend-code { font-weight: 700; font-size: 11px; }
+.legend-name { color: #64748b; }
 
 /* ── Table view ──────────────────────────────────────── */
 .table-scroll { overflow-x: auto; }
@@ -777,6 +854,27 @@ body {
 .panel-list.data    li { border-color: #94a3b8; background: #f8fafc; }
 .panel-list.actions li { border-color: #38bdf8; background: #f0f9ff; }
 .no-data { font-size: 12px; color: #cbd5e1; font-style: italic; }
+
+/* ── Panel Octalysis drives ──────────────────────────── */
+.panel-drives {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.panel-drive-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.pdc-code { font-weight: 800; font-size: 12px; flex-shrink: 0; }
+.pdc-name { color: #334155; flex: 1; }
+.pdc-hat  { font-size: 10px; border-radius: 3px; padding: 1px 5px; flex-shrink: 0; }
+.white-hat-badge { background: #dcfce7; color: #16a34a; }
+.black-hat-badge { background: #fee2e2; color: #dc2626; }
 `;
 }
 
@@ -808,12 +906,10 @@ const panel      = document.getElementById('detail-panel');
 const panelBody  = document.getElementById('panel-content');
 const panelClose = document.getElementById('panel-close');
 
-function emotionColor(score) {
-  if (score === null) return '#cbd5e1';
-  if (score <= 3) return '#f87171';
-  if (score <= 5) return '#fb923c';
-  if (score <= 7) return '#facc15';
-  return '#4ade80';
+const OCTALYSIS_JS = ${JSON.stringify(OCTALYSIS)};
+
+function driveColor(code) {
+  return OCTALYSIS_JS[code] ? OCTALYSIS_JS[code].color : '#cbd5e1';
 }
 
 function listSection(title, items, cls) {
@@ -839,14 +935,22 @@ function textSection(title, val) {
 function openPanel(idx) {
   const s = JOURNEY.steps[idx];
   const ec = emotionColor(s.emotion_score);
-  const pct = s.emotion_score !== null ? (s.emotion_score / 10 * 100) : 0;
   panelBody.innerHTML = \`
     <div class="panel-step-name">\${s.name}</div>
     <div class="panel-phase">\${s.phase || ''}\${s.touchpoint ? ' · ' + s.touchpoint : ''}</div>
-    \${s.emotion_score !== null ? \`
-    <div class="panel-score-bar">
-      <span class="score-label">Emotion \${s.emotion_score}/10</span>
-      <div class="score-track"><div class="score-fill" style="width:\${pct}%;background:\${ec}"></div></div>
+    \${s.octalysis_drives && s.octalysis_drives.length ? \`
+    <div class="panel-drives">
+      \${s.octalysis_drives.map(d => {
+        const m = d.match(/^(CD[1-8])/i);
+        const code = m ? m[1].toUpperCase() : null;
+        const def = code && OCTALYSIS_JS[code];
+        if (!def) return '';
+        return \`<div class="panel-drive-chip" style="background:\${def.color}18;border:1px solid \${def.color}">
+          <span class="pdc-code" style="color:\${def.color}">\${code}</span>
+          <span class="pdc-name">\${def.name}</span>
+          <span class="pdc-hat \${def.hat}-hat-badge">\${def.hat} hat</span>
+        </div>\`;
+      }).join('')}
     </div>\` : ''}
     \${textSection('Description', s.description)}
     \${textSection('Player Goal', s.player_goal)}
@@ -929,7 +1033,7 @@ document.getElementById('btn-export').addEventListener('click', () => {
 // ---------------------------------------------------------------------------
 function buildPageHTML(journey) {
   const flowSVG       = buildFlowSVG(journey);
-  const emotionSVG    = buildEmotionCurveSVG(journey);
+  const emotionSVG    = buildDriveTimeline(journey);
   const tableView     = buildTableView(journey);
   const phaseBanner   = buildPhaseBanner(journey);
   const detailPanel   = buildDetailPanel();

@@ -106,17 +106,91 @@ body {
   stroke-width: 3;
 }
 
-/* ── Emotion curve ───────────────────────────────────── */
-.emotion-wrap {
+/* ── Drive Timeline ──────────────────────────────────── */
+.drive-timeline-wrap {
   margin-top: 32px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 16px 20px;
-  overflow-x: auto;
 }
-.emotion-dot { transition: r 0.15s; }
-.emotion-dot:hover { r: 7; }
+.legend-hat { font-size: 10px; font-weight: 500; margin-left: 12px; }
+.legend-hat.white-hat { color: #22c55e; }
+.legend-hat.black-hat { color: #ef4444; }
+.drive-timeline {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  margin-top: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.dt-col {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 10px 12px;
+  border-right: 1px solid #e2e8f0;
+  transition: background 0.15s;
+}
+.dt-col:last-child { border-right: none; }
+.dt-col:hover { background: #f8fafc; }
+.dt-col.hat-white { border-top: 3px solid #22c55e; }
+.dt-col.hat-black { border-top: 3px solid #ef4444; }
+.dt-col.hat-mixed { border-top: 3px solid #f59e0b; }
+.dt-step-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+  min-height: 24px;
+}
+.drive-chip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid;
+  cursor: default;
+}
+.dt-emotion {
+  font-size: 10px;
+  color: #64748b;
+  line-height: 1.4;
+  font-style: italic;
+}
+.drive-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.legend-code { font-weight: 700; font-size: 11px; }
+.legend-name { color: #64748b; }
 
 /* ── Table view ──────────────────────────────────────── */
 .table-scroll { overflow-x: auto; }
@@ -249,6 +323,27 @@ body {
 .panel-list.data    li { border-color: #94a3b8; background: #f8fafc; }
 .panel-list.actions li { border-color: #38bdf8; background: #f0f9ff; }
 .no-data { font-size: 12px; color: #cbd5e1; font-style: italic; }
+
+/* ── Panel Octalysis drives ──────────────────────────── */
+.panel-drives {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.panel-drive-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.pdc-code { font-weight: 800; font-size: 12px; flex-shrink: 0; }
+.pdc-name { color: #334155; flex: 1; }
+.pdc-hat  { font-size: 10px; border-radius: 3px; padding: 1px 5px; flex-shrink: 0; }
+.white-hat-badge { background: #dcfce7; color: #16a34a; }
+.black-hat-badge { background: #fee2e2; color: #dc2626; }
 </style>
 </head>
 <body>
@@ -257,7 +352,7 @@ body {
   <div class="header-text">
     <h1>Find a Specific League Line</h1>
     <p>A punter tries to find pre-match, live, and outright markets for a specific league (e.g. NFL, Premier League) in a single session</p>
-    <div class="header-meta">BetOnline Sportsbook &nbsp;·&nbsp; Updated 2026-04-13</div>
+    <div class="header-meta">BetOnline Sportsbook &nbsp;·&nbsp; Updated 2026-04-14</div>
   </div>
   <div class="header-actions">
     <button class="btn active" id="btn-flow">Flow</button>
@@ -297,154 +392,147 @@ body {
   
     <g class="step-node" data-idx="0" style="cursor:pointer">
       <rect x="20" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#facc15" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="20" y="20" width="150" height="6" rx="4" fill="#facc15" opacity="0.7"/>
+      <rect x="20" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="95" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">Land on Homepage</text>
-      <text x="160" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">6/10</text>
+      
       
     </g>
     <g class="step-node" data-idx="1" style="cursor:pointer">
       <rect x="234" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#fb923c" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="234" y="20" width="150" height="6" rx="4" fill="#fb923c" opacity="0.7"/>
+      <rect x="234" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="309" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
-            class="node-label">Navigate to League</text>
-      <text x="374" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">5/10</text>
+            class="node-label">Navigate to Sport</text>
+      
       
     </g>
     <g class="step-node" data-idx="2" style="cursor:pointer">
       <rect x="448" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#fb923c" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="448" y="20" width="150" height="6" rx="4" fill="#fb923c" opacity="0.7"/>
+      <rect x="448" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="523" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">Select League</text>
-      <text x="588" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">4/10</text>
+      
       
     </g>
     <g class="step-node" data-idx="3" style="cursor:pointer">
       <rect x="662" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#facc15" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="662" y="20" width="150" height="6" rx="4" fill="#facc15" opacity="0.7"/>
+      <rect x="662" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="737" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">Browse Pre-match Mar…</text>
-      <text x="802" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">6/10</text>
+      
       
     </g>
     <g class="step-node" data-idx="4" style="cursor:pointer">
       <rect x="876" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#f87171" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="876" y="20" width="150" height="6" rx="4" fill="#f87171" opacity="0.7"/>
+      <rect x="876" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="951" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">Browse Live Markets</text>
-      <text x="1016" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">3/10</text>
+      
       
     </g>
     <g class="step-node" data-idx="5" style="cursor:pointer">
       <rect x="1090" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#fb923c" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="1090" y="20" width="150" height="6" rx="4" fill="#fb923c" opacity="0.7"/>
+      <rect x="1090" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="1165" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">Find Outrights</text>
-      <text x="1230" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">5/10</text>
+      
       
     </g>
     <g class="step-node" data-idx="6" style="cursor:pointer">
       <rect x="1304" y="20" width="150" height="56"
-            rx="8" fill="white" stroke="#facc15" stroke-width="2.5"
+            rx="8" fill="white" stroke="#cbd5e1" stroke-width="2.5"
             class="node-rect"/>
-      <rect x="1304" y="20" width="150" height="6" rx="4" fill="#facc15" opacity="0.7"/>
+      <rect x="1304" y="20" width="150" height="6" rx="4" fill="#cbd5e1" opacity="0.7"/>
       <text x="1379" y="48" text-anchor="middle"
             font-size="11" font-weight="600" fill="#1e293b" font-family="system-ui"
             class="node-label">Select Bet and Add t…</text>
-      <text x="1444" y="68" text-anchor="end" font-size="10" fill="#64748b" font-family="system-ui">7/10</text>
+      
       
     </g>
 </svg></div>
     
-<div class="emotion-wrap">
-  <div class="section-label">Emotion Curve</div>
-  <svg width="900" height="130" viewBox="0 0 900 130" style="display:block;max-width:100%"
-       xmlns="http://www.w3.org/2000/svg">
-    <text x="30" y="85.6" text-anchor="end" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">2</text>
-            <line x1="36" y1="81.6" x2="876" y2="81.6"
-                  stroke="#f1f5f9" stroke-width="1"/><text x="30" y="69.19999999999999" text-anchor="end" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">4</text>
-            <line x1="36" y1="65.19999999999999" x2="876" y2="65.19999999999999"
-                  stroke="#f1f5f9" stroke-width="1"/><text x="30" y="52.800000000000004" text-anchor="end" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">6</text>
-            <line x1="36" y1="48.800000000000004" x2="876" y2="48.800000000000004"
-                  stroke="#f1f5f9" stroke-width="1"/><text x="30" y="36.39999999999999" text-anchor="end" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">8</text>
-            <line x1="36" y1="32.39999999999999" x2="876" y2="32.39999999999999"
-                  stroke="#f1f5f9" stroke-width="1"/><text x="30" y="20" text-anchor="end" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">10</text>
-            <line x1="36" y1="16" x2="876" y2="16"
-                  stroke="#f1f5f9" stroke-width="1"/>
-    <path d="M36,98 L36,48.800000000000004 L176,57 L316,65.19999999999999 L456,48.800000000000004 L596,73.4 L736,57 L876,40.6 L876,98 Z" fill="#e0f2fe" opacity="0.5"/>
-    <polyline points="36,48.800000000000004 176,57 316,65.19999999999999 456,48.800000000000004 596,73.4 736,57 876,40.6" fill="none" stroke="#38bdf8" stroke-width="2"/>
-    
-    <circle cx="36" cy="48.800000000000004" r="5" fill="#facc15"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="0" style="cursor:pointer">
-      <title>Step 1: Land on Homepage — 6/10</title>
-    </circle>
-    <circle cx="176" cy="57" r="5" fill="#fb923c"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="1" style="cursor:pointer">
-      <title>Step 2: Navigate to League — 5/10</title>
-    </circle>
-    <circle cx="316" cy="65.19999999999999" r="5" fill="#fb923c"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="2" style="cursor:pointer">
-      <title>Step 3: Select League — 4/10</title>
-    </circle>
-    <circle cx="456" cy="48.800000000000004" r="5" fill="#facc15"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="3" style="cursor:pointer">
-      <title>Step 4a: Browse Pre-match Markets — 6/10</title>
-    </circle>
-    <circle cx="596" cy="73.4" r="5" fill="#f87171"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="4" style="cursor:pointer">
-      <title>Step 4b: Browse Live Markets — 3/10</title>
-    </circle>
-    <circle cx="736" cy="57" r="5" fill="#fb923c"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="5" style="cursor:pointer">
-      <title>Step 4c: Find Outrights — 5/10</title>
-    </circle>
-    <circle cx="876" cy="40.6" r="5" fill="#facc15"
-            stroke="white" stroke-width="1.5" class="emotion-dot"
-            data-idx="6" style="cursor:pointer">
-      <title>Step 5: Select Bet and Add to Betslip — 7/10</title>
-    </circle>
-    <text x="36" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Land on Home…</text><text x="176" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Navigate to …</text><text x="316" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Select League</text><text x="456" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Browse Pre-m…</text><text x="596" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Browse Live …</text><text x="736" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Find Outrights</text><text x="876" y="126" text-anchor="middle" font-size="9"
-                  fill="#94a3b8" font-family="system-ui">Select Bet a…</text>
-    <line x1="36" y1="16" x2="36" y2="98"
-          stroke="#e2e8f0" stroke-width="1"/>
-    <line x1="36" y1="98" x2="876" y2="98"
-          stroke="#e2e8f0" stroke-width="1"/>
-  </svg>
+<div class="drive-timeline-wrap">
+  <div class="section-label">Emotional Drive Timeline <span class="legend-hat white-hat">● White Hat</span><span class="legend-hat black-hat">● Black Hat</span></div>
+  <div class="drive-timeline"><div class="dt-col " data-idx="0" style="cursor:pointer">
+      <div class="dt-step-label">Land on Homepage</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">Purposeful but scanning — they know what they want, mild impatience if it isn't immediately obvious</div>
+    </div><div class="dt-col " data-idx="1" style="cursor:pointer">
+      <div class="dt-step-label">Navigate to Sp…</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">Mild frustration if the list is long and unfiltered — feels like unnecessary friction</div>
+    </div><div class="dt-col " data-idx="2" style="cursor:pointer">
+      <div class="dt-step-label">Select League</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">Expectation then frustration — they expected a complete view, got a partial one</div>
+    </div><div class="dt-col " data-idx="3" style="cursor:pointer">
+      <div class="dt-step-label">Browse Pre-mat…</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">Engaged and analytical — evaluating lines, comparing options, feeling in control</div>
+    </div><div class="dt-col " data-idx="4" style="cursor:pointer">
+      <div class="dt-step-label">Browse Live Ma…</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">High urgency and frustration — every extra tap is a missed in-play opportunity</div>
+    </div><div class="dt-col " data-idx="5" style="cursor:pointer">
+      <div class="dt-step-label">Find Outrights</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">Exploratory and patient, but annoyed by the navigation break — feels like a different product</div>
+    </div><div class="dt-col " data-idx="6" style="cursor:pointer">
+      <div class="dt-step-label">Select Bet and…</div>
+      <div class="dt-chips"><span class="no-data">—</span></div>
+      <div class="dt-emotion">Excitement and anticipation mixed with anxiety — wants confirmation fast</div>
+    </div></div>
+  <div class="drive-legend"><div class="legend-item">
+      <span class="legend-dot" style="background:#6366f1"></span>
+      <span class="legend-code" style="color:#6366f1">CD1</span>
+      <span class="legend-name">Epic Meaning & Calling</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#22c55e"></span>
+      <span class="legend-code" style="color:#22c55e">CD2</span>
+      <span class="legend-name">Development & Accomplishment</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#a855f7"></span>
+      <span class="legend-code" style="color:#a855f7">CD3</span>
+      <span class="legend-name">Empowerment of Creativity</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#14b8a6"></span>
+      <span class="legend-code" style="color:#14b8a6">CD4</span>
+      <span class="legend-name">Ownership & Possession</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#f59e0b"></span>
+      <span class="legend-code" style="color:#f59e0b">CD5</span>
+      <span class="legend-name">Social Influence & Relatedness</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#f97316"></span>
+      <span class="legend-code" style="color:#f97316">CD6</span>
+      <span class="legend-name">Scarcity & Impatience</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#06b6d4"></span>
+      <span class="legend-code" style="color:#06b6d4">CD7</span>
+      <span class="legend-name">Unpredictability & Curiosity</span>
+    </div><div class="legend-item">
+      <span class="legend-dot" style="background:#ef4444"></span>
+      <span class="legend-code" style="color:#ef4444">CD8</span>
+      <span class="legend-name">Loss & Avoidance</span>
+    </div></div>
 </div>
   </div>
 
@@ -455,31 +543,31 @@ body {
       <thead>
         <tr>
           <th class="row-label corner"></th>
-          <th style="background:#facc1522;border-bottom:3px solid #facc15;min-width:180px">
+          <th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
       <span class="th-step-name">Step 1: Land on Homepage</span>
       <span class="th-phase">Discovery</span>
-    </th><th style="background:#fb923c22;border-bottom:3px solid #fb923c;min-width:180px">
-      <span class="th-step-name">Step 2: Navigate to League</span>
+    </th><th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
+      <span class="th-step-name">Step 2: Navigate to Sport</span>
       <span class="th-phase">Discovery</span>
-    </th><th style="background:#fb923c22;border-bottom:3px solid #fb923c;min-width:180px">
+    </th><th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
       <span class="th-step-name">Step 3: Select League</span>
       <span class="th-phase">Discovery</span>
-    </th><th style="background:#facc1522;border-bottom:3px solid #facc15;min-width:180px">
+    </th><th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
       <span class="th-step-name">Step 4a: Browse Pre-match Markets</span>
       <span class="th-phase">Selection</span>
-    </th><th style="background:#f8717122;border-bottom:3px solid #f87171;min-width:180px">
+    </th><th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
       <span class="th-step-name">Step 4b: Browse Live Markets</span>
       <span class="th-phase">Selection</span>
-    </th><th style="background:#fb923c22;border-bottom:3px solid #fb923c;min-width:180px">
+    </th><th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
       <span class="th-step-name">Step 4c: Find Outrights</span>
       <span class="th-phase">Selection</span>
-    </th><th style="background:#facc1522;border-bottom:3px solid #facc15;min-width:180px">
+    </th><th style="background:#cbd5e122;border-bottom:3px solid #cbd5e1;min-width:180px">
       <span class="th-step-name">Step 5: Select Bet and Add to Betslip</span>
       <span class="th-phase">Selection</span>
     </th>
         </tr>
       </thead>
-      <tbody><tr><th class="row-label">Persona</th><td>Recreational Punter</td><td>Recreational Punter</td><td>Recreational Punter, Sharp</td><td>Recreational Punter, Sharp</td><td>Recreational Punter, Sharp</td><td>Sharp, Recreational Punter (seasonal)</td><td>Recreational Punter, Sharp</td></tr><tr><th class="row-label">Touchpoint</th><td>Homepage</td><td>Left nav / top nav Popular leagues only in mobile</td><td>League entry point (left nav item or top popular leaguesin mobile)</td><td>Pre-match Sportsbook — League view</td><td>Live Betting section — League filter</td><td>Outrights / Futures section (separate from main sportsbook)</td><td>Game detail / Market view → Betslip</td></tr><tr><th class="row-label">Player Action</th><td>The user physically lands on the homepage and scans the layout for navigation cues</td><td>The user clicks a sport category and scans the resulting league list</td><td>The user clicks the league name expecting to see all markets for that league</td><td>The user scans game rows, scroll right to see more markets, and evaluates lines</td><td>The user navigates to Live Betting, scans active games, and filters or scrolls to find their league</td><td>The user navigates to a separate Outrights section, browses available markets, and evaluates futures odds</td><td>The user clicks an odds button, reviews the betslip, enters a stake, and confirms the bet</td></tr><tr><th class="row-label">Player Goal</th><td>Quickly find the league they have in mind and see available betting options</td><td>Get one level closer to their target league</td><td>See all available betting options for this league in one place</td><td>Find the game and market they want to bet on before it starts</td><td>Find an in-play market on a specific league's game quickly</td><td>Find the best available futures market for their league and evaluate the odds</td><td>Get their selection on the betslip accurately and quickly, then place the bet</td></tr><tr><th class="row-label">Business Goal</th><td>Minimize time-to-first-bet; surface the most popular leagues prominently</td><td>Keep the funnel moving; reduce drop-off between sport and league selection</td><td>Route user to the highest-value market (live if game is in progress; pre-match if not)</td><td>Maximize pre-match handle; encourage multi-game/parlay selection</td><td>Capture live handle; live bettors are high-value, time-sensitive</td><td>Drive futures handle; futures bets have long lock-in periods that benefit the book</td><td>Maximize bet placement completion rate; minimize betslip abandonment</td></tr><tr><th class="row-label">Success Criteria</th><td>User identifies a clear path to their target sport/league within 10 seconds</td><td>User finds their target league in one single entry in the list</td><td>User sees a complete, unified view of the league's betting landscape</td><td>User finds their target game and market within 2 clicks from the league page</td><td>User finds their live game within 15 seconds of deciding to bet live</td><td>User finds and evaluates at least 3 outright market options for their league</td><td>Bet is placed successfully with correct selection and stake in under 30 seconds from betslip open</td></tr><tr><th class="row-label">Emotions / Feeling</th><td>Neutral to slightly impatient — they know what they want and just need to find it</td><td>Mild frustration if the list is long and with several entries for same league</td><td>Expectation of comprehensiveness — quickly becomes frustration when they realize the view is partial</td><td>Engaged if the market offering is rich; frustrated if limited or slow to load</td><td>High urgency — live markets move fast; every extra navigation step costs real betting opportunity</td><td>Exploratory and patient, but frustrated by the navigation break from the main league context</td><td>Excitement mixed with anxiety — they want confirmation quickly</td></tr><tr><th class="row-label">Pain Points</th><td><ul><li>Homepage includes promotion; navigation to specific leagues is not available unless league is popular in mobile, not in desktop without left nav, only to specific most popular games</li><li>No persistent &quot;recently viewed leagues&quot; shortcut</li><li>Live and Pre-match are presented as separate top-level sections, creating confusion about where to start</li></ul></td><td><ul><li>League list can be very long and lacks of one single league entry</li><li>No indication of which leagues have live games vs pre-match only vs outrights available</li><li>No indications of where all lines for the league are available</li><li>Sharp bettors find the navigation too slow; they prefer direct URLs or search</li></ul></td><td><ul><li>No unified league hub — clicking a league in Pre-match takes you to pre-match only; clicking in Live takes you to live only</li><li>Outrights are in a completely separate section, often hard to find</li><li>Users have to navigate to 2-3 different places to get a full picture of a league's markets</li></ul></td><td><ul><li>Not all the markets are available in the same left nav entry point</li><li>Real Games are duplicated in the list</li><li>Left nav counter doesn´t represent real games</li><li>No way to compare lines across multiple games on one screen</li><li>Live games that have started are not available, causing confusion</li></ul></td><td><ul><li>No direct access from the league page to live markets for that league</li><li>Live Betting section shows all lagues with alphabetical order — finding a relevant league requires a lot of scrolling</li><li>Odds update speed and latency can cause selections to be rejected (&quot;line has moved&quot;)</li></ul></td><td><ul><li>Outrights are completely disconnected from the league page — discoverability is very low</li></ul></td><td><ul><li>Betslip can be slow to update when odds change</li><li>Parlay building across pre-match and live is not supported</li><li>Stake entry UX on mobile is poor (keyboard obscures betslip)</li></ul></td></tr><tr><th class="row-label">Opportunities</th><td><ul><li>Offering direct league access in the home page without too many clicks in left nav</li></ul></td><td><ul><li>Show live/pre-match/outright availability badges next to each league name</li><li>Create a League Hub with all league related content</li></ul></td><td class="empty">—</td><td><ul><li>Merge duplicated games into one single game entry</li><li>Unified left nav entries for same leagues within a game</li><li>Add a &quot;Same Game Parlay&quot; and &quot;Odds Boosters&quot; filtered content CTA on league view for recreational bettors</li></ul></td><td><ul><li>Add live games link directly on the league hub to access live now content</li><li>Persist league filter when user switches from pre-match to live</li></ul></td><td><ul><li>Surface outright teasers on the league hub with an outright tab</li><li>Add a cross-sell strip in game detail views linking to relevant futures</li></ul></td><td><ul><li>Improve live betting delay</li><li>Push users to change their betslip accept odds preferences</li><li>Enable quick-stake buttons (e.g. $10 / $25 / $50 / $100)</li></ul></td></tr><tr><th class="row-label">Ideas</th><td><ul><li>Personalized league shortcuts based on bet history</li><li>Smart banner that detects live games in the user's preferred leagues</li></ul></td><td><ul><li>&quot;Now Live&quot; indicator on league rows</li></ul></td><td><ul><li>&quot;League Hub&quot; concept: single destination per league with product toggle</li></ul></td><td><ul><li>Unified all league related content in one entry point</li><li>Prematch to live transitions</li></ul></td><td><ul><li>Live games are in the league hub</li><li>Prematch to live transition in both league hub view and event view</li><li>Leagues order by popularity in live only inside a specific sport</li><li>Push notification or on-site alert when a followed league goes live</li></ul></td><td><ul><li>&quot;League Futures&quot; tab on the unified league hub</li><li>Remove all different outrights entry points to be inside the league hun</li><li>Add the soccer outrights into each soccer league</li><li>Create better naming for different outrights type</li></ul></td><td><ul><li>&quot;Bet and Watch&quot; integration — place bet and get live stream in one flow</li><li>Cross-product parlay builder that spans pre-match + live + outrights</li></ul></td></tr><tr><th class="row-label">Data Sources</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr><tr><th class="row-label">Emotion Score</th><td>6</td><td>5</td><td>4</td><td>6</td><td>3</td><td>5</td><td>7</td></tr></tbody>
+      <tbody><tr><th class="row-label">Persona</th><td>Recreational Punter</td><td>Recreational Punter</td><td>Recreational Punter, Sharp</td><td>Recreational Punter, Sharp</td><td>Recreational Punter, Sharp</td><td>Sharp, Recreational Punter (seasonal)</td><td>Recreational Punter, Sharp</td></tr><tr><th class="row-label">Touchpoint</th><td>Homepage</td><td>Left nav / Sport landing page</td><td>League entry point (left nav item or sport page card)</td><td>Pre-match Sportsbook — League view</td><td>Live Betting section — League filter</td><td>Outrights / Futures section (separate from main sportsbook)</td><td>Game detail / Market view → Betslip</td></tr><tr><th class="row-label">Player Action</th><td>The user physically lands on the homepage and scans the layout for navigation cues</td><td>The user clicks a sport category and scans the resulting league list</td><td>The user clicks the league name expecting to see all markets for that league</td><td>The user scans game cards, expands markets, and evaluates lines</td><td>The user navigates to Live Betting, scans active games, and filters or scrolls to find their league</td><td>The user navigates to a separate Outrights section, browses available markets, and evaluates futures odds</td><td>The user clicks an odds button, reviews the betslip, enters a stake, and confirms the bet</td></tr><tr><th class="row-label">Player Goal</th><td>Quickly find the league they have in mind and see available betting options</td><td>Get one level closer to their target league</td><td>See all available betting options for this league in one place</td><td>Find the game and market they want to bet on before it starts</td><td>Find an in-play market on a specific league's game quickly</td><td>Find the best available futures market for their league and evaluate the odds</td><td>Get their selection on the betslip accurately and quickly, then place the bet</td></tr><tr><th class="row-label">Business Goal</th><td>Minimize time-to-first-bet; surface the most popular leagues prominently</td><td>Keep the funnel moving; reduce drop-off between sport and league selection</td><td>Route user to the highest-value market (live if game is in progress; pre-match if not)</td><td>Maximize pre-match handle; encourage multi-game/parlay selection</td><td>Capture live handle; live bettors are high-value, time-sensitive</td><td>Drive futures handle; futures bets have long lock-in periods that benefit the book</td><td>Maximize bet placement completion rate; minimize betslip abandonment</td></tr><tr><th class="row-label">Success Criteria</th><td>User identifies a clear path to their target sport/league within 10 seconds</td><td>User finds their target league in the list without scrolling more than one screen</td><td>User sees a complete, unified view of the league's betting landscape</td><td>User finds their target game and market within 2 clicks from the league page</td><td>User finds their live game within 15 seconds of deciding to bet live</td><td>User finds and evaluates at least 3 outright market options for their league</td><td>Bet is placed successfully with correct selection and stake in under 30 seconds from betslip open</td></tr><tr><th class="row-label">Emotions / Feeling</th><td>Purposeful but scanning — they know what they want, mild impatience if it isn't immediately obvious</td><td>Mild frustration if the list is long and unfiltered — feels like unnecessary friction</td><td>Expectation then frustration — they expected a complete view, got a partial one</td><td>Engaged and analytical — evaluating lines, comparing options, feeling in control</td><td>High urgency and frustration — every extra tap is a missed in-play opportunity</td><td>Exploratory and patient, but annoyed by the navigation break — feels like a different product</td><td>Excitement and anticipation mixed with anxiety — wants confirmation fast</td></tr><tr><th class="row-label">Pain Points</th><td><ul><li>Homepage is often promotion-heavy; navigation to specific leagues is buried</li><li>No persistent &quot;recently viewed leagues&quot; shortcut</li><li>Live and Pre-match are presented as separate top-level sections, creating confusion about where to start</li></ul></td><td><ul><li>League list can be very long and lacks filtering or pinning</li><li>No indication of which leagues have live games vs pre-match only vs outrights available</li><li>Sharp bettors find the navigation too slow; they prefer direct URLs or search</li></ul></td><td><ul><li>No unified league hub — clicking a league in Pre-match takes you to pre-match only; clicking in Live takes you to live only</li><li>Outrights are in a completely separate section, often hard to find</li><li>Users have to navigate to 2-3 different places to get a full picture of a league's markets</li></ul></td><td><ul><li>Market depth varies significantly by league/game — unclear before clicking in</li><li>No way to compare lines across multiple games on one screen</li><li>Live games that have started are still listed in pre-match, causing confusion</li></ul></td><td><ul><li>No direct link from the league page to live markets for that league</li><li>Live Betting section shows all sports mixed together — finding a specific league requires filtering</li><li>Odds update speed and latency can cause selections to be rejected (&quot;line has moved&quot;)</li></ul></td><td><ul><li>Outrights are completely disconnected from the league page — discoverability is very low</li></ul></td><td><ul><li>Betslip can be slow to update when odds change</li><li>Parlay building across pre-match and live is not supported or is clunky</li><li>Stake entry UX on mobile is poor (keyboard obscures betslip)</li></ul></td></tr><tr><th class="row-label">Opportunities</th><td><ul><li>Surface top leagues directly on the homepage hero area</li><li>Add a &quot;My Leagues&quot; quick-access widget for returning users</li></ul></td><td><ul><li>Show live/pre-match/outright availability badges next to each league name</li><li>Allow users to pin favorite leagues to the top</li></ul></td><td class="empty">—</td><td><ul><li>Show market count per game on the league list view</li><li>Add a &quot;Same Game Parlay&quot; CTA on league view for recreational bettors</li></ul></td><td><ul><li>Add &quot;X games live now&quot; link directly on the league hub to jump to live view</li><li>Persist league filter when user switches from pre-match to live context</li></ul></td><td><ul><li>Surface outright teasers on the league hub (&quot;4 outrights available — view all&quot;)</li><li>Add a cross-sell strip in game detail views linking to relevant futures</li></ul></td><td><ul><li>Show real-time odds change indicator on betslip before placement</li><li>Enable quick-stake buttons (e.g. $10 / $25 / $50 / $100)</li></ul></td></tr><tr><th class="row-label">Ideas</th><td><ul><li>Personalized league shortcuts based on bet history</li><li>Smart banner that detects live games in the user's preferred leagues</li></ul></td><td><ul><li>&quot;Now Live&quot; indicator on league rows</li></ul></td><td><ul><li>&quot;League Hub&quot; concept: single destination per league with product toggle</li></ul></td><td><ul><li>Odds comparison strip on league view (show spread + total + ML in one row)</li><li>Auto-remove started games from pre-match view or flag them clearly</li></ul></td><td><ul><li>Live scoreboard widget embedded on the league hub</li><li>Push notification or on-site alert when a followed league goes live</li></ul></td><td><ul><li>&quot;League Futures&quot; card on the unified league hub</li><li>Outright odds movement tracker (shows line movement over time)</li></ul></td><td><ul><li>&quot;Bet and Watch&quot; integration — place bet and get live stream in one flow</li><li>Cross-product parlay builder that spans pre-match + live + outrights</li></ul></td></tr><tr><th class="row-label">Data Sources</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr><tr><th class="row-label">Octalysis Drives</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -493,7 +581,7 @@ body {
 </aside>
 
 <script>
-const JOURNEY = {"slug":"find-a-line-for-a-league","title":"Find a Specific League Line","id":"leagueline","description":"A punter tries to find pre-match, live, and outright markets for a specific league (e.g. NFL, Premier League) in a single session","product":"BetOnline Sportsbook","last_updated":"2026-04-13","phases":[{"name":"Discovery","guiding_question":"How does a punter become aware of and navigate to a specific league's betting content?"},{"name":"Selection","guiding_question":"Once inside a league, how does a punter find the specific market they want and place a bet?"}],"steps":[{"name":"Step 1: Land on Homepage","branch":null,"persona":"Recreational Punter","touchpoint":"Homepage","screenshot":"screenshots/step1-homepage.png","description":"The user arrives at BetOnline/sportsbook after deciding they want to bet on a specific league (e.g. World Cup). They orient themselves on the homepage.","player_goal":"Quickly find the league they have in mind and see available betting options","business_goal":"Minimize time-to-first-bet; surface the most popular leagues prominently","player_action_description":"The user physically lands on the homepage and scans the layout for navigation cues","player_emotions":"Neutral to slightly impatient — they know what they want and just need to find it","success_criteria":"User identifies a clear path to their target sport/league within 10 seconds","emotion_score":6,"user_actions":["Scans left navigation or most popular leagues","Looks for sport/league"],"pain_points":["Homepage includes promotion; navigation to specific leagues is not available unless league is popular in mobile, not in desktop without left nav, only to specific most popular games","No persistent \"recently viewed leagues\" shortcut","Live and Pre-match are presented as separate top-level sections, creating confusion about where to start"],"opportunities":["Offering direct league access in the home page without too many clicks in left nav"],"ideas":["Personalized league shortcuts based on bet history","Smart banner that detects live games in the user's preferred leagues"],"data_sources":[],"phase":"Discovery"},{"name":"Step 2: Navigate to League","branch":null,"persona":"Recreational Punter","touchpoint":"Left nav / top nav Popular leagues only in mobile","screenshot":"screenshots/step2-sport-nav.png","description":"The user clicks on the sport (e.g. Football / Soccer) from the left nav or top menu. They expand the sport that lists available leagues.","player_goal":"Get one level closer to their target league","business_goal":"Keep the funnel moving; reduce drop-off between sport and league selection","player_action_description":"The user clicks a sport category and scans the resulting league list","player_emotions":"Mild frustration if the list is long and with several entries for same league","success_criteria":"User finds their target league in one single entry in the list","emotion_score":5,"user_actions":["Clicks sport in left navigation","Scans league list","May scroll extensively if the league list is long"],"pain_points":["League list can be very long and lacks of one single league entry","No indication of which leagues have live games vs pre-match only vs outrights available","No indications of where all lines for the league are available","Sharp bettors find the navigation too slow; they prefer direct URLs or search"],"opportunities":["Show live/pre-match/outright availability badges next to each league name","Create a League Hub with all league related content"],"ideas":["\"Now Live\" indicator on league rows"],"data_sources":[],"phase":"Discovery"},{"name":"Step 3: Select League","branch":null,"persona":"Recreational Punter, Sharp","touchpoint":"League entry point (left nav item or top popular leaguesin mobile)","screenshot":"screenshots/step3-league-select.png","description":"The user clicks on their target league (e.g. NFL, Premier League). This is the critical decision point — the product currently routes them to either Pre-match OR Live, not a unified league hub. Sometimes even for same prematch league content they are multie entry points and outrights are separated","player_goal":"See all available betting options for this league in one place","business_goal":"Route user to the highest-value market (live if game is in progress; pre-match if not)","player_action_description":"The user clicks the league name expecting to see all markets for that league","player_emotions":"Expectation of comprehensiveness — quickly becomes frustration when they realize the view is partial","success_criteria":"User sees a complete, unified view of the league's betting landscape","emotion_score":4,"user_actions":["Clicks league name","Expects to land on a page showing upcoming games, live games, and outrights"],"pain_points":["No unified league hub — clicking a league in Pre-match takes you to pre-match only; clicking in Live takes you to live only","Outrights are in a completely separate section, often hard to find","Users have to navigate to 2-3 different places to get a full picture of a league's markets"],"opportunities":[],"ideas":["\"League Hub\" concept: single destination per league with product toggle"],"data_sources":[],"phase":"Discovery"},{"name":"Step 4a: Browse Pre-match Markets","branch":"prematch","persona":"Recreational Punter, Sharp","touchpoint":"Pre-match Sportsbook — League view","screenshot":"screenshots/step4a-prematch.png","description":"The user is on the pre-match league page. They browse upcoming games and available markets.","player_goal":"Find the game and market they want to bet on before it starts","business_goal":"Maximize pre-match handle; encourage multi-game/parlay selection","player_action_description":"The user scans game rows, scroll right to see more markets, and evaluates lines","player_emotions":"Engaged if the market offering is rich; frustrated if limited or slow to load","success_criteria":"User finds their target game and market within 2 clicks from the league page","emotion_score":6,"user_actions":["Scans list of upcoming games sorted by date/time","Clicks into a game to see full market offering","Compares lines across games (e.g. spreads, totals, moneylines)"],"pain_points":["Not all the markets are available in the same left nav entry point","Real Games are duplicated in the list","Left nav counter doesn´t represent real games","No way to compare lines across multiple games on one screen","Live games that have started are not available, causing confusion"],"opportunities":["Merge duplicated games into one single game entry","Unified left nav entries for same leagues within a game","Add a \"Same Game Parlay\" and \"Odds Boosters\" filtered content CTA on league view for recreational bettors"],"ideas":["Unified all league related content in one entry point","Prematch to live transitions"],"data_sources":[],"phase":"Selection"},{"name":"Step 4b: Browse Live Markets","branch":"live","persona":"Recreational Punter, Sharp","touchpoint":"Live Betting section — League filter","screenshot":"screenshots/step4b-live.png","description":"The user is looking for in-play betting on their league. They must navigate to the separate Live Betting section and then filter by sport and find the league — there is no direct path from the league page to live markets.","player_goal":"Find an in-play market on a specific league's game quickly","business_goal":"Capture live handle; live bettors are high-value, time-sensitive","player_action_description":"The user navigates to Live Betting, scans active games, and filters or scrolls to find their league","player_emotions":"High urgency — live markets move fast; every extra navigation step costs real betting opportunity","success_criteria":"User finds their live game within 15 seconds of deciding to bet live","emotion_score":3,"user_actions":["Navigates to Live Betting (separate top-level section)","Scans all live games across all sports","Filters or scrolls to find their target league","Clicks into a game to see live markets"],"pain_points":["No direct access from the league page to live markets for that league","Live Betting section shows all lagues with alphabetical order — finding a relevant league requires a lot of scrolling","Odds update speed and latency can cause selections to be rejected (\"line has moved\")"],"opportunities":["Add live games link directly on the league hub to access live now content","Persist league filter when user switches from pre-match to live"],"ideas":["Live games are in the league hub","Prematch to live transition in both league hub view and event view","Leagues order by popularity in live only inside a specific sport","Push notification or on-site alert when a followed league goes live"],"data_sources":[],"phase":"Selection"},{"name":"Step 4c: Find Outrights","branch":"outrights","persona":"Sharp, Recreational Punter (seasonal)","touchpoint":"Outrights / Futures section (separate from main sportsbook)","screenshot":"screenshots/step4c-outrights.png","description":"The user wants to place a futures/outright bet (e.g. NFL Super Bowl winner, PL top scorer). Outrights are currently housed in a separate section with no link from the league page.","player_goal":"Find the best available futures market for their league and evaluate the odds","business_goal":"Drive futures handle; futures bets have long lock-in periods that benefit the book","player_action_description":"The user navigates to a separate Outrights section, browses available markets, and evaluates futures odds","player_emotions":"Exploratory and patient, but frustrated by the navigation break from the main league context","success_criteria":"User finds and evaluates at least 3 outright market options for their league","emotion_score":5,"user_actions":["Navigates to Outrights/Futures (separated sections)","Browser different outright types for the league","Browses market list (winner, top scorer, relegation, etc.)","Evaluates multiple outcomes before selecting"],"pain_points":["Outrights are completely disconnected from the league page — discoverability is very low"],"opportunities":["Surface outright teasers on the league hub with an outright tab","Add a cross-sell strip in game detail views linking to relevant futures"],"ideas":["\"League Futures\" tab on the unified league hub","Remove all different outrights entry points to be inside the league hun","Add the soccer outrights into each soccer league","Create better naming for different outrights type"],"data_sources":[],"phase":"Selection"},{"name":"Step 5: Select Bet and Add to Betslip","branch":null,"persona":"Recreational Punter, Sharp","touchpoint":"Game detail / Market view → Betslip","screenshot":"screenshots/step5-betslip.png","description":"The user has found their market and clicks an odds button to add a selection to the betslip. They may add one selection (single) or multiple (parlay/accumulator).","player_goal":"Get their selection on the betslip accurately and quickly, then place the bet","business_goal":"Maximize bet placement completion rate; minimize betslip abandonment","player_action_description":"The user clicks an odds button, reviews the betslip, enters a stake, and confirms the bet","player_emotions":"Excitement mixed with anxiety — they want confirmation quickly","success_criteria":"Bet is placed successfully with correct selection and stake in under 30 seconds from betslip open","emotion_score":7,"user_actions":["Clicks odds button to add selection","Reviews betslip (selection, odds, potential return)","Enters stake amount","Confirms bet placement"],"pain_points":["Betslip can be slow to update when odds change","Parlay building across pre-match and live is not supported","Stake entry UX on mobile is poor (keyboard obscures betslip)"],"opportunities":["Improve live betting delay","Push users to change their betslip accept odds preferences","Enable quick-stake buttons (e.g. $10 / $25 / $50 / $100)"],"ideas":["\"Bet and Watch\" integration — place bet and get live stream in one flow","Cross-product parlay builder that spans pre-match + live + outrights"],"data_sources":[],"phase":"Selection"}]};
+const JOURNEY = {"slug":"find-a-line-for-a-league","title":"Find a Specific League Line","id":"leagueline","description":"A punter tries to find pre-match, live, and outright markets for a specific league (e.g. NFL, Premier League) in a single session","product":"BetOnline Sportsbook","last_updated":"2026-04-14","phases":[{"name":"Discovery","guiding_question":"How does a punter become aware of and navigate to a specific league's betting content?"},{"name":"Selection","guiding_question":"Once inside a league, how does a punter find the specific market they want and place a bet?"}],"steps":[{"name":"Step 1: Land on Homepage","branch":null,"persona":"Recreational Punter","touchpoint":"Homepage","screenshot":"screenshots/step1-homepage.png","description":"The user arrives at BetOnline after deciding they want to bet on a specific league (e.g. NFL). They orient themselves on the homepage.","player_goal":"Quickly find the league they have in mind and see available betting options","business_goal":"Minimize time-to-first-bet; surface the most popular leagues prominently","player_action_description":"The user physically lands on the homepage and scans the layout for navigation cues","player_emotions":"Purposeful but scanning — they know what they want, mild impatience if it isn't immediately obvious","success_criteria":"User identifies a clear path to their target sport/league within 10 seconds","user_actions":["Scans header navigation","Looks for sport/league shortcuts or featured banners","May use search if visible"],"pain_points":["Homepage is often promotion-heavy; navigation to specific leagues is buried","No persistent \"recently viewed leagues\" shortcut","Live and Pre-match are presented as separate top-level sections, creating confusion about where to start"],"opportunities":["Surface top leagues directly on the homepage hero area","Add a \"My Leagues\" quick-access widget for returning users"],"ideas":["Personalized league shortcuts based on bet history","Smart banner that detects live games in the user's preferred leagues"],"data_sources":[],"octalysis_drives":[],"phase":"Discovery"},{"name":"Step 2: Navigate to Sport","branch":null,"persona":"Recreational Punter","touchpoint":"Left nav / Sport landing page","screenshot":"screenshots/step2-sport-nav.png","description":"The user clicks on the sport (e.g. Football / Soccer) from the left nav or top menu. They land on a sport-level page that lists available leagues.","player_goal":"Get one level closer to their target league","business_goal":"Keep the funnel moving; reduce drop-off between sport and league selection","player_action_description":"The user clicks a sport category and scans the resulting league list","player_emotions":"Mild frustration if the list is long and unfiltered — feels like unnecessary friction","success_criteria":"User finds their target league in the list without scrolling more than one screen","user_actions":["Clicks sport in left navigation","Scans league list (alphabetical or by popularity)","May scroll extensively if the league list is long"],"pain_points":["League list can be very long and lacks filtering or pinning","No indication of which leagues have live games vs pre-match only vs outrights available","Sharp bettors find the navigation too slow; they prefer direct URLs or search"],"opportunities":["Show live/pre-match/outright availability badges next to each league name","Allow users to pin favorite leagues to the top"],"ideas":["\"Now Live\" indicator on league rows"],"data_sources":[],"octalysis_drives":[],"phase":"Discovery"},{"name":"Step 3: Select League","branch":null,"persona":"Recreational Punter, Sharp","touchpoint":"League entry point (left nav item or sport page card)","screenshot":"screenshots/step3-league-select.png","description":"The user clicks on their target league (e.g. NFL, Premier League). This is the critical decision point — the product currently routes them to either Pre-match OR Live, not a unified league hub.","player_goal":"See all available betting options for this league in one place","business_goal":"Route user to the highest-value market (live if game is in progress; pre-match if not)","player_action_description":"The user clicks the league name expecting to see all markets for that league","player_emotions":"Expectation then frustration — they expected a complete view, got a partial one","success_criteria":"User sees a complete, unified view of the league's betting landscape","user_actions":["Clicks league name","Expects to land on a page showing upcoming games, live games, and outrights"],"pain_points":["No unified league hub — clicking a league in Pre-match takes you to pre-match only; clicking in Live takes you to live only","Outrights are in a completely separate section, often hard to find","Users have to navigate to 2-3 different places to get a full picture of a league's markets"],"opportunities":[],"ideas":["\"League Hub\" concept: single destination per league with product toggle"],"data_sources":[],"octalysis_drives":[],"phase":"Discovery"},{"name":"Step 4a: Browse Pre-match Markets","branch":"prematch","persona":"Recreational Punter, Sharp","touchpoint":"Pre-match Sportsbook — League view","screenshot":"screenshots/step4a-prematch.png","description":"The user is on the pre-match league page. They browse upcoming games and available markets.","player_goal":"Find the game and market they want to bet on before it starts","business_goal":"Maximize pre-match handle; encourage multi-game/parlay selection","player_action_description":"The user scans game cards, expands markets, and evaluates lines","player_emotions":"Engaged and analytical — evaluating lines, comparing options, feeling in control","success_criteria":"User finds their target game and market within 2 clicks from the league page","user_actions":["Scans list of upcoming games sorted by date/time","Clicks into a game to see full market offering","Compares lines across games (e.g. spreads, totals, moneylines)"],"pain_points":["Market depth varies significantly by league/game — unclear before clicking in","No way to compare lines across multiple games on one screen","Live games that have started are still listed in pre-match, causing confusion"],"opportunities":["Show market count per game on the league list view","Add a \"Same Game Parlay\" CTA on league view for recreational bettors"],"ideas":["Odds comparison strip on league view (show spread + total + ML in one row)","Auto-remove started games from pre-match view or flag them clearly"],"data_sources":[],"octalysis_drives":[],"phase":"Selection"},{"name":"Step 4b: Browse Live Markets","branch":"live","persona":"Recreational Punter, Sharp","touchpoint":"Live Betting section — League filter","screenshot":"screenshots/step4b-live.png","description":"The user is looking for in-play betting on their league. They must navigate to the separate Live Betting section and then filter by league — there is no direct path from the league page to live markets.","player_goal":"Find an in-play market on a specific league's game quickly","business_goal":"Capture live handle; live bettors are high-value, time-sensitive","player_action_description":"The user navigates to Live Betting, scans active games, and filters or scrolls to find their league","player_emotions":"High urgency and frustration — every extra tap is a missed in-play opportunity","success_criteria":"User finds their live game within 15 seconds of deciding to bet live","user_actions":["Navigates to Live Betting (separate top-level section)","Scans all live games across all sports","Filters or scrolls to find their target league","Clicks into a game to see live markets"],"pain_points":["No direct link from the league page to live markets for that league","Live Betting section shows all sports mixed together — finding a specific league requires filtering","Odds update speed and latency can cause selections to be rejected (\"line has moved\")"],"opportunities":["Add \"X games live now\" link directly on the league hub to jump to live view","Persist league filter when user switches from pre-match to live context"],"ideas":["Live scoreboard widget embedded on the league hub","Push notification or on-site alert when a followed league goes live"],"data_sources":[],"octalysis_drives":[],"phase":"Selection"},{"name":"Step 4c: Find Outrights","branch":"outrights","persona":"Sharp, Recreational Punter (seasonal)","touchpoint":"Outrights / Futures section (separate from main sportsbook)","screenshot":"screenshots/step4c-outrights.png","description":"The user wants to place a futures/outright bet (e.g. NFL Super Bowl winner, PL top scorer). Outrights are currently housed in a separate section with no link from the league page.","player_goal":"Find the best available futures market for their league and evaluate the odds","business_goal":"Drive futures handle; futures bets have long lock-in periods that benefit the book","player_action_description":"The user navigates to a separate Outrights section, browses available markets, and evaluates futures odds","player_emotions":"Exploratory and patient, but annoyed by the navigation break — feels like a different product","success_criteria":"User finds and evaluates at least 3 outright market options for their league","user_actions":["Navigates to Outrights/Futures (separate section)","Browses market list (winner, top scorer, relegation, etc.)","Evaluates multiple outcomes before selecting"],"pain_points":["Outrights are completely disconnected from the league page — discoverability is very low"],"opportunities":["Surface outright teasers on the league hub (\"4 outrights available — view all\")","Add a cross-sell strip in game detail views linking to relevant futures"],"ideas":["\"League Futures\" card on the unified league hub","Outright odds movement tracker (shows line movement over time)"],"data_sources":[],"octalysis_drives":[],"phase":"Selection"},{"name":"Step 5: Select Bet and Add to Betslip","branch":null,"persona":"Recreational Punter, Sharp","touchpoint":"Game detail / Market view → Betslip","screenshot":"screenshots/step5-betslip.png","description":"The user has found their market and clicks an odds button to add a selection to the betslip. They may add one selection (single) or multiple (parlay/accumulator).","player_goal":"Get their selection on the betslip accurately and quickly, then place the bet","business_goal":"Maximize bet placement completion rate; minimize betslip abandonment","player_action_description":"The user clicks an odds button, reviews the betslip, enters a stake, and confirms the bet","player_emotions":"Excitement and anticipation mixed with anxiety — wants confirmation fast","success_criteria":"Bet is placed successfully with correct selection and stake in under 30 seconds from betslip open","user_actions":["Clicks odds button to add selection","Reviews betslip (selection, odds, potential return)","Enters stake amount","Confirms bet placement"],"pain_points":["Betslip can be slow to update when odds change","Parlay building across pre-match and live is not supported or is clunky","Stake entry UX on mobile is poor (keyboard obscures betslip)"],"opportunities":["Show real-time odds change indicator on betslip before placement","Enable quick-stake buttons (e.g. $10 / $25 / $50 / $100)"],"ideas":["\"Bet and Watch\" integration — place bet and get live stream in one flow","Cross-product parlay builder that spans pre-match + live + outrights"],"data_sources":[],"octalysis_drives":[],"phase":"Selection"}]};
 
 // ── View toggle ──────────────────────────────────────
 const btnFlow  = document.getElementById('btn-flow');
@@ -515,12 +603,10 @@ const panel      = document.getElementById('detail-panel');
 const panelBody  = document.getElementById('panel-content');
 const panelClose = document.getElementById('panel-close');
 
-function emotionColor(score) {
-  if (score === null) return '#cbd5e1';
-  if (score <= 3) return '#f87171';
-  if (score <= 5) return '#fb923c';
-  if (score <= 7) return '#facc15';
-  return '#4ade80';
+const OCTALYSIS_JS = {"CD1":{"name":"Epic Meaning & Calling","hat":"white","color":"#6366f1","short":"CD1"},"CD2":{"name":"Development & Accomplishment","hat":"white","color":"#22c55e","short":"CD2"},"CD3":{"name":"Empowerment of Creativity","hat":"white","color":"#a855f7","short":"CD3"},"CD4":{"name":"Ownership & Possession","hat":"white","color":"#14b8a6","short":"CD4"},"CD5":{"name":"Social Influence & Relatedness","hat":"white","color":"#f59e0b","short":"CD5"},"CD6":{"name":"Scarcity & Impatience","hat":"black","color":"#f97316","short":"CD6"},"CD7":{"name":"Unpredictability & Curiosity","hat":"black","color":"#06b6d4","short":"CD7"},"CD8":{"name":"Loss & Avoidance","hat":"black","color":"#ef4444","short":"CD8"}};
+
+function driveColor(code) {
+  return OCTALYSIS_JS[code] ? OCTALYSIS_JS[code].color : '#cbd5e1';
 }
 
 function listSection(title, items, cls) {
@@ -546,14 +632,22 @@ function textSection(title, val) {
 function openPanel(idx) {
   const s = JOURNEY.steps[idx];
   const ec = emotionColor(s.emotion_score);
-  const pct = s.emotion_score !== null ? (s.emotion_score / 10 * 100) : 0;
   panelBody.innerHTML = `
     <div class="panel-step-name">${s.name}</div>
     <div class="panel-phase">${s.phase || ''}${s.touchpoint ? ' · ' + s.touchpoint : ''}</div>
-    ${s.emotion_score !== null ? `
-    <div class="panel-score-bar">
-      <span class="score-label">Emotion ${s.emotion_score}/10</span>
-      <div class="score-track"><div class="score-fill" style="width:${pct}%;background:${ec}"></div></div>
+    ${s.octalysis_drives && s.octalysis_drives.length ? `
+    <div class="panel-drives">
+      ${s.octalysis_drives.map(d => {
+        const m = d.match(/^(CD[1-8])/i);
+        const code = m ? m[1].toUpperCase() : null;
+        const def = code && OCTALYSIS_JS[code];
+        if (!def) return '';
+        return `<div class="panel-drive-chip" style="background:${def.color}18;border:1px solid ${def.color}">
+          <span class="pdc-code" style="color:${def.color}">${code}</span>
+          <span class="pdc-name">${def.name}</span>
+          <span class="pdc-hat ${def.hat}-hat-badge">${def.hat} hat</span>
+        </div>`;
+      }).join('')}
     </div>` : ''}
     ${textSection('Description', s.description)}
     ${textSection('Player Goal', s.player_goal)}
