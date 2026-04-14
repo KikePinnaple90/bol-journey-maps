@@ -16,23 +16,21 @@
 - persona: Recreational Punter
 - touchpoint: Homepage
 - screenshot: screenshots/step1-homepage.png
-- description: The user arrives at BetOnline after deciding they want to bet on a specific league (e.g. NFL). They orient themselves on the homepage.
+- description: The user arrives at BetOnline/sportsbook after deciding they want to bet on a specific league (e.g. World Cup). They orient themselves on the homepage.
 - player_goal: Quickly find the league they have in mind and see available betting options
 - business_goal: Minimize time-to-first-bet; surface the most popular leagues prominently
 - player_action_description: The user physically lands on the homepage and scans the layout for navigation cues
 - user_actions:
-  - Scans header navigation
-  - Looks for sport/league shortcuts or featured banners
-  - May use search if visible
+  - Scans left navigation or most popular leagues
+  - Looks for sport/league 
 - player_emotions: Neutral to slightly impatient — they know what they want and just need to find it
 - success_criteria: User identifies a clear path to their target sport/league within 10 seconds
 - pain_points:
-  - Homepage is often promotion-heavy; navigation to specific leagues is buried
+  - Homepage includes promotion; navigation to specific leagues is not available unless league is popular in mobile, not in desktop without left nav, only to specific most popular games
   - No persistent "recently viewed leagues" shortcut
   - Live and Pre-match are presented as separate top-level sections, creating confusion about where to start
 - opportunities:
-  - Surface top leagues directly on the homepage hero area
-  - Add a "My Leagues" quick-access widget for returning users
+  - Offering direct league access in the home page without too many clicks in left nav
 - ideas:
   - Personalized league shortcuts based on bet history
   - Smart banner that detects live games in the user's preferred leagues
@@ -43,28 +41,29 @@
 
 ---
 
-### Step 2: Navigate to Sport
+### Step 2: Navigate to League
 
 - persona: Recreational Punter
-- touchpoint: Left nav / Sport landing page
+- touchpoint: Left nav / top nav Popular leagues only in mobile
 - screenshot: screenshots/step2-sport-nav.png
-- description: The user clicks on the sport (e.g. Football / Soccer) from the left nav or top menu. They land on a sport-level page that lists available leagues.
+- description: The user clicks on the sport (e.g. Football / Soccer) from the left nav or top menu. They expand the sport that lists available leagues.
 - player_goal: Get one level closer to their target league
 - business_goal: Keep the funnel moving; reduce drop-off between sport and league selection
 - player_action_description: The user clicks a sport category and scans the resulting league list
 - user_actions:
   - Clicks sport in left navigation
-  - Scans league list (alphabetical or by popularity)
+  - Scans league list 
   - May scroll extensively if the league list is long
-- player_emotions: Mild frustration if the list is long and unfiltered
-- success_criteria: User finds their target league in the list without scrolling more than one screen
+- player_emotions: Mild frustration if the list is long and with several entries for same league
+- success_criteria: User finds their target league in one single entry in the list
 - pain_points:
-  - League list can be very long and lacks filtering or pinning
+  - League list can be very long and lacks of one single league entry
   - No indication of which leagues have live games vs pre-match only vs outrights available
+  - No indications of where all lines for the league are available
   - Sharp bettors find the navigation too slow; they prefer direct URLs or search
 - opportunities:
   - Show live/pre-match/outright availability badges next to each league name
-  - Allow users to pin favorite leagues to the top
+  - Create a League Hub with all league related content
 - ideas:
   - "Now Live" indicator on league rows
   - Filter chips: Show Pre-match only / Live only / Has Outrights
@@ -78,9 +77,9 @@
 ### Step 3: Select League
 
 - persona: Recreational Punter, Sharp
-- touchpoint: League entry point (left nav item or sport page card)
+- touchpoint: League entry point (left nav item or top popular leaguesin mobile)
 - screenshot: screenshots/step3-league-select.png
-- description: The user clicks on their target league (e.g. NFL, Premier League). This is the critical decision point — the product currently routes them to either Pre-match OR Live, not a unified league hub.
+- description: The user clicks on their target league (e.g. NFL, Premier League). This is the critical decision point — the product currently routes them to either Pre-match OR Live, not a unified league hub. Sometimes even for same prematch league content they are multie entry points and outrights are separated
 - player_goal: See all available betting options for this league in one place
 - business_goal: Route user to the highest-value market (live if game is in progress; pre-match if not)
 - player_action_description: The user clicks the league name expecting to see all markets for that league
@@ -98,7 +97,7 @@
   - Deep-link league from anywhere to the hub, not to a product-specific silo
 - ideas:
   - "League Hub" concept: single destination per league with product toggle
-  - Smart default: if a game is live, default to Live tab; otherwise Pre-match
+  - Smart default: if a game is live, live is at the top of the game list hub; otherwise only Pre-match
 - data_sources:
   - Internal: bounce rate on league pages
   - Internal: navigation paths after league click (do users bounce back and re-navigate?)
@@ -121,7 +120,7 @@
 - description: The user is on the pre-match league page. They browse upcoming games and available markets.
 - player_goal: Find the game and market they want to bet on before it starts
 - business_goal: Maximize pre-match handle; encourage multi-game/parlay selection
-- player_action_description: The user scans game cards, expands markets, and evaluates lines
+- player_action_description: The user scans game rows, scroll right to see more markets, and evaluates lines
 - user_actions:
   - Scans list of upcoming games sorted by date/time
   - Clicks into a game to see full market offering
@@ -129,18 +128,22 @@
 - player_emotions: Engaged if the market offering is rich; frustrated if limited or slow to load
 - success_criteria: User finds their target game and market within 2 clicks from the league page
 - pain_points:
-  - Market depth varies significantly by league/game — unclear before clicking in
+  - Not all the markets are available in the same left nav entry point
+  - Real Games are duplicated in the list
+  - Left nav counter doesn´t represent real games
   - No way to compare lines across multiple games on one screen
-  - Live games that have started are still listed in pre-match, causing confusion
+  - Live games that have started are not available, causing confusion
 - opportunities:
-  - Show market count per game on the league list view
-  - Add a "Same Game Parlay" CTA on league view for recreational bettors
+  - Merge duplicated games into one single game entry
+  - Unified left nav entries for same leagues within a game
+  - Add a "Same Game Parlay" and "Odds Boosters" filtered content CTA on league view for recreational bettors
 - ideas:
-  - Odds comparison strip on league view (show spread + total + ML in one row)
-  - Auto-remove started games from pre-match view or flag them clearly
+  - Unified all league related content in one entry point
+  - Prematch to live transitions
 - data_sources:
   - Internal: click-through rate from league list to game detail
   - Internal: markets per game viewed before bet placement
+  - Navigation loops
 - emotion_score: 6
 
 ---
@@ -150,7 +153,7 @@
 - persona: Recreational Punter, Sharp
 - touchpoint: Live Betting section — League filter
 - screenshot: screenshots/step4b-live.png
-- description: The user is looking for in-play betting on their league. They must navigate to the separate Live Betting section and then filter by league — there is no direct path from the league page to live markets.
+- description: The user is looking for in-play betting on their league. They must navigate to the separate Live Betting section and then filter by sport and find the league — there is no direct path from the league page to live markets.
 - player_goal: Find an in-play market on a specific league's game quickly
 - business_goal: Capture live handle; live bettors are high-value, time-sensitive
 - player_action_description: The user navigates to Live Betting, scans active games, and filters or scrolls to find their league
@@ -162,14 +165,16 @@
 - player_emotions: High urgency — live markets move fast; every extra navigation step costs real betting opportunity
 - success_criteria: User finds their live game within 15 seconds of deciding to bet live
 - pain_points:
-  - No direct link from the league page to live markets for that league
-  - Live Betting section shows all sports mixed together — finding a specific league requires filtering
+  - No direct access from the league page to live markets for that league
+  - Live Betting section shows all lagues with alphabetical order — finding a relevant league requires a lot of scrolling
   - Odds update speed and latency can cause selections to be rejected ("line has moved")
 - opportunities:
-  - Add "X games live now" link directly on the league hub to jump to live view
-  - Persist league filter when user switches from pre-match to live context
+  - Add live games link directly on the league hub to access live now content 
+  - Persist league filter when user switches from pre-match to live
 - ideas:
-  - Live scoreboard widget embedded on the league hub
+  - Live games are in the league hub
+  - Prematch to live transition in both league hub view and event view
+  - Leagues order by popularity in live only inside a specific sport
   - Push notification or on-site alert when a followed league goes live
 - data_sources:
   - Internal: live bet acceptance rate (rejection due to line movement)
@@ -189,7 +194,8 @@
 - business_goal: Drive futures handle; futures bets have long lock-in periods that benefit the book
 - player_action_description: The user navigates to a separate Outrights section, browses available markets, and evaluates futures odds
 - user_actions:
-  - Navigates to Outrights/Futures (separate section)
+  - Navigates to Outrights/Futures (separated sections)
+  - Browser different outright types for the league
   - Browses market list (winner, top scorer, relegation, etc.)
   - Evaluates multiple outcomes before selecting
 - player_emotions: Exploratory and patient, but frustrated by the navigation break from the main league context
@@ -198,12 +204,15 @@
   - Outrights are completely disconnected from the league page — discoverability is very low
   - No cross-sell from pre-match game view to relevant outrights ("Also bet: NFL MVP Outright")
   - Market availability is inconsistent — some leagues have rich futures, others have none
+  - In soccer Outrights are not even inside the sport tree
 - opportunities:
-  - Surface outright teasers on the league hub ("4 outrights available — view all")
+  - Surface outright teasers on the league hub with an outright tab
   - Add a cross-sell strip in game detail views linking to relevant futures
 - ideas:
-  - "League Futures" card on the unified league hub
-  - Outright odds movement tracker (shows line movement over time)
+  - "League Futures" tab on the unified league hub
+  - Remove all different outrights entry points to be inside the league hun
+  - Add the soccer outrights into each soccer league 
+  - Create better naming for different outrights type
 - data_sources:
   - Internal: outright section traffic and conversion rate
   - Internal: bounce rate on outright listings by league
@@ -229,10 +238,11 @@
 - success_criteria: Bet is placed successfully with correct selection and stake in under 30 seconds from betslip open
 - pain_points:
   - Betslip can be slow to update when odds change
-  - Parlay building across pre-match and live is not supported or is clunky
+  - Parlay building across pre-match and live is not supported
   - Stake entry UX on mobile is poor (keyboard obscures betslip)
 - opportunities:
-  - Show real-time odds change indicator on betslip before placement
+  - Improve live betting delay
+  - Push users to change their betslip accept odds preferences
   - Enable quick-stake buttons (e.g. $10 / $25 / $50 / $100)
 - ideas:
   - "Bet and Watch" integration — place bet and get live stream in one flow
