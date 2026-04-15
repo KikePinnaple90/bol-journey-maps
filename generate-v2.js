@@ -873,8 +873,8 @@ document.getElementById('btn-export').addEventListener('click',()=>{
 
 // ─── Page assembler ──────────────────────────────────────────────────────────
 
-function buildPageHTML(journey) {
-  const ssMap     = collectScreenshots(journey);
+function buildPageHTML(journey, ssMapOverride) {
+  const ssMap     = ssMapOverride !== undefined ? ssMapOverride : collectScreenshots(journey);
   const tableView = buildTableView(journey);
   const detPanel  = buildDetailPanel();
   const css       = buildCSS();
@@ -996,7 +996,9 @@ function run() {
   console.log('BetOnline Journey Map Generator — v2');
   console.log('=====================================\n');
 
-  const targetSlug = process.argv[2] || null;
+  const args      = process.argv.slice(2);
+  const lite      = args.includes('--lite');
+  const targetSlug = args.find(a => !a.startsWith('--')) || null;
 
   const files = fs.readdirSync(JOURNEYS_DIR)
     .filter(f => f.endsWith('.md'))
@@ -1026,19 +1028,44 @@ function run() {
       process.exit(1);
     }
 
-    const outFile = path.join(OUTPUT_DIR, `${journey.slug}-v2.html`);
-    process.stdout.write(`Building ${journey.slug}-v2.html ... `);
-    try {
-      collectScreenshots(journey); // sets step._screenshots
-      const html = buildPageHTML(journey);
-      fs.writeFileSync(outFile, html, 'utf8');
-      const size = (fs.statSync(outFile).size / 1024).toFixed(1);
-      console.log(`OK  → output/${journey.slug}-v2.html  (${size} KB)`);
-    } catch (err) {
-      console.error(`FAILED\n  ${err.message}`);
-      process.exit(1);
+    // Full HTML (with embedded screenshots)
+    if (!lite) {
+      const outFile = path.join(OUTPUT_DIR, `${journey.slug}-v2.html`);
+      process.stdout.write(`Building ${journey.slug}-v2.html ... `);
+      try {
+        collectScreenshots(journey);
+        const html = buildPageHTML(journey);
+        fs.writeFileSync(outFile, html, 'utf8');
+        const size = (fs.statSync(outFile).size / 1024).toFixed(1);
+        console.log(`OK  → output/${journey.slug}-v2.html  (${size} KB)`);
+      } catch (err) {
+        console.error(`FAILED\n  ${err.message}`);
+        process.exit(1);
+      }
     }
 
+    // Lite HTML (no embedded screenshots — small, GitHub-previewable)
+    if (lite) {
+      const liteFile = path.join(OUTPUT_DIR, `${journey.slug}-lite.html`);
+      process.stdout.write(`Building ${journey.slug}-lite.html ... `);
+      try {
+        // Set _screenshots but pass empty map so cards show placeholders
+        for (const s of journey.steps) {
+          const paths = s.screenshots && s.screenshots.length ? s.screenshots
+                      : s.screenshot ? [s.screenshot] : [];
+          s._screenshots = paths;
+        }
+        const html = buildPageHTML(journey, {});
+        fs.writeFileSync(liteFile, html, 'utf8');
+        const size = (fs.statSync(liteFile).size / 1024).toFixed(1);
+        console.log(`OK  → output/${journey.slug}-lite.html  (${size} KB)`);
+      } catch (err) {
+        console.error(`FAILED\n  ${err.message}`);
+        process.exit(1);
+      }
+    }
+
+    // Markdown export (always)
     const mdFile = path.join(OUTPUT_DIR, `${journey.slug}-v2.md`);
     process.stdout.write(`Building ${journey.slug}-v2.md  ... `);
     try {
