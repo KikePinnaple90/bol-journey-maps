@@ -68,4 +68,4 @@ Tell the user:
 - Which goals have measurements vs. which need metrics defined
 - Which goals have results vs. which are pending
 
-Refer to [template.md](template.md) for the exact table structure.
+Refer to [template.md](../templates/business-goals.md) for the exact table structure.

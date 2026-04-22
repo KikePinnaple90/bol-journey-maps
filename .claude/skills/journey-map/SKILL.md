@@ -111,4 +111,4 @@ Tell the user:
 
 Every journey should read like a senior PM wrote it after real user research. The detail in `pain_points` and `player_emotions` is what makes this tool valuable — not the structure itself. If the input is thin, ask follow-up questions rather than producing vague content.
 
-Refer to [template.md](template.md) for the exact field structure.
+Refer to [template.md](../templates/journey-map.md) for the exact field structure.

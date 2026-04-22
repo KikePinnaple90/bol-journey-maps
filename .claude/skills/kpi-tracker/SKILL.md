@@ -72,4 +72,4 @@ Tell the user:
 - Which KPIs have targets vs which need to be defined
 - Which KPIs have no WHERE yet (data source unknown)
 
-Refer to [template.md](template.md) for the exact table structure.
+Refer to [template.md](../templates/kpi-tracker.md) for the exact table structure.
