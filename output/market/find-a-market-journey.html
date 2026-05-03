@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Find a Market for a Game — BetOnline SB26</title>
+<style>
+:root{
+  --bg:#f4f5f7;--surface:#ffffff;--surface2:#f0f1f4;
+  --border:#e2e5ec;--border-light:#d4d8e2;
+  --text-primary:#111827;--text-secondary:#4b5563;--text-muted:#9ca3af;
+  --accent:#2563eb;--accent-dim:rgba(37,99,235,0.08);--accent-dim2:rgba(37,99,235,0.04);
+  --green:#16a34a;--green-dim:rgba(22,163,74,0.08);
+  --amber:#b45309;--amber-dim:rgba(180,83,9,0.08);
+  --red:#dc2626;--red-dim:rgba(220,38,38,0.08);
+  --purple:#7c3aed;--purple-dim:rgba(124,58,237,0.08);
+  --teal:#0369a1;--teal-dim:rgba(3,105,161,0.08);
+  --radius:10px;--radius-sm:6px;
+  --font-display:'Georgia','Times New Roman',serif;
+  --font-body:'Trebuchet MS','Lucida Grande',sans-serif;
+  --font-mono:'Courier New',monospace;
+  --nav-width:220px;--top-bar:56px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary);font-size:14px;line-height:1.5}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;height:var(--top-bar);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px 0 16px;gap:14px;z-index:100}
+.top-bar-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.wordmark{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text-primary);white-space:nowrap}
+.top-meta{color:var(--text-muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.meta-badge{background:var(--surface2);border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--top-bar);left:0;bottom:0;width:var(--nav-width);background:var(--surface);border-right:1px solid var(--border);padding:20px 0;overflow-y:auto;z-index:90}
+.sidebar-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:16px 16px 6px;margin-top:8px}
+.sidebar-section:first-child{margin-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary);border-left:3px solid transparent;transition:all .12s}
+.nav-item:hover{background:var(--accent-dim2);color:var(--text-primary)}
+.nav-item.active{background:var(--accent-dim);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+
+/* MAIN */
+.main{margin-left:var(--nav-width);margin-top:var(--top-bar);min-height:calc(100vh - var(--top-bar));padding:0}
+.page{display:none}
+.page.active{display:block}
+
+/* SECTION HEADER */
+.section-header{padding:28px 32px 20px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.section-header-left h1{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.section-header-left .subtitle{color:var(--text-secondary);font-size:13px;margin-bottom:10px}
+.meta-tags{display:flex;flex-wrap:wrap;gap:6px}
+.view-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;height:34px}
+.view-btn{padding:0 14px;font-size:12px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text-muted);border:none;transition:all .12s;white-space:nowrap}
+.view-btn.active{background:var(--accent);color:#fff}
+
+/* SECTION BODY */
+.section-body{padding:28px 32px 48px}
+
+/* PANELS */
+.view-panel{display:none}
+.view-panel.active{display:block}
+
+/* TABLES */
+.table-wrap{margin-bottom:24px}
+.table-title{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:8px}
+.data-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.data-table th{background:#1e293b;color:#fff;padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;text-align:left}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:top;color:var(--text-secondary)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:nth-child(even) td{background:var(--surface2)}
+.data-table td strong{font-weight:700;color:var(--text-primary);display:block;margin-bottom:2px}
+.data-table td ul{padding-left:14px;margin-top:3px}
+.data-table td li{margin-bottom:2px;line-height:1.4}
+
+/* BADGE */
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.badge-accent{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(37,99,235,.25)}
+.badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(22,163,74,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(180,83,9,.25)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(220,38,38,.25)}
+.badge-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(124,58,237,.25)}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(3,105,161,.25)}
+.badge-muted{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
+
+/* NOTES BLOCK */
+.notes-block{background:var(--amber-dim);border:1px solid rgba(180,83,9,.2);border-radius:var(--radius);padding:16px 18px;margin-top:24px}
+.notes-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);margin-bottom:8px}
+.notes-block ul{padding-left:0;list-style:none}
+.notes-block li{font-size:12px;color:var(--text-secondary);padding:3px 0;padding-left:14px;position:relative;line-height:1.5}
+.notes-block li::before{content:"→";position:absolute;left:0;color:var(--amber)}
+
+/* STAGE FILTER TABS */
+.stage-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.stage-tab{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);transition:all .12s}
+.stage-tab:hover{border-color:var(--accent);color:var(--accent)}
+.stage-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* STEP ACCORDION */
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;transition:box-shadow .12s}
+.step-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.step-card[data-stage="engage"] .step-num{background:var(--teal-dim);color:var(--teal)}
+.step-card[data-stage="convert"] .step-num{background:var(--amber-dim);color:var(--amber)}
+.step-card[data-stage="excite"] .step-num{background:var(--green-dim);color:var(--green)}
+.step-card[data-stage="ascend"] .step-num{background:var(--purple-dim);color:var(--purple)}
+.step-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--accent-dim);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-header-mid{flex:1;min-width:0}
+.step-title{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+.step-meta{font-size:11px;color:var(--text-muted)}
+.step-badges{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.step-chevron{color:var(--text-muted);font-size:12px;transition:transform .15s;flex-shrink:0}
+.step-card.open .step-chevron{transform:rotate(180deg)}
+.step-body{display:none;padding:0 16px 16px}
+.step-card.open .step-body{display:block}
+.step-description{font-size:13px;color:var(--text-secondary);margin-bottom:12px;line-height:1.6}
+.step-emotion{background:var(--purple-dim);border-left:3px solid var(--purple);padding:8px 12px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:12px;color:var(--purple);margin-bottom:14px;font-style:italic}
+.step-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.step-detail-box{border-radius:var(--radius-sm);overflow:hidden}
+.step-detail-box.full{grid-column:1/-1}
+.step-detail-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 10px}
+.step-detail-content{font-size:12px;padding:8px 10px}
+.step-detail-content ul{padding-left:14px}
+.step-detail-content li{margin-bottom:3px;line-height:1.4;color:var(--text-secondary)}
+.step-detail-box.pain .step-detail-label{background:var(--red-dim);color:var(--red)}
+.step-detail-box.pain .step-detail-content{background:rgba(220,38,38,.03);border:1px solid rgba(220,38,38,.15);border-top:none}
+.step-detail-box.opportunity .step-detail-label{background:var(--green-dim);color:var(--green)}
+.step-detail-box.opportunity .step-detail-content{background:rgba(22,163,74,.03);border:1px solid rgba(22,163,74,.15);border-top:none}
+.step-detail-box.ideas .step-detail-label{background:var(--amber-dim);color:var(--amber)}
+.step-detail-box.ideas .step-detail-content{background:rgba(180,83,9,.03);border:1px solid rgba(180,83,9,.15);border-top:none}
+.step-detail-box.octalysis .step-detail-label{background:var(--purple-dim);color:var(--purple)}
+.step-detail-box.octalysis .step-detail-content{background:rgba(124,58,237,.03);border:1px solid rgba(124,58,237,.15);border-top:none}
+.step-detail-box.data .step-detail-label{background:var(--teal-dim);color:var(--teal)}
+.step-detail-box.data .step-detail-content{background:rgba(3,105,161,.03);border:1px solid rgba(3,105,161,.15);border-top:none}
+.step-detail-content .goals-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goal-mini{background:var(--surface2);border-radius:var(--radius-sm);padding:6px 8px}
+.goal-mini .gl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:2px}
+.goal-mini p{font-size:11px;color:var(--text-secondary)}
+.hidden-step{display:none}
+
+/* GOAL ACCORDION */
+.goal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.goal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 14px;cursor:pointer;user-select:none}
+.goal-header-left{}
+.goal-header-left .goal-title{font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:3px}
+.goal-header-left .goal-subtitle{font-size:12px;color:var(--text-secondary);line-height:1.5}
+.goal-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.goal-body{display:none;padding:0 16px 16px}
+.goal-card.open .goal-body{display:block}
+.goal-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.confirmation-row{background:var(--accent-dim);border:1px solid rgba(37,99,235,.15);border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;color:var(--accent)}
+.confirmation-row strong{font-weight:700}
+
+/* STANDARD GOALS GRID */
+.std-goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.std-goal-cell{background:var(--surface);padding:12px 14px}
+.std-goal-cell:nth-child(odd){background:var(--surface2)}
+.std-goal-title{font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+.std-goal-sub{font-size:11px;color:var(--text-muted)}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px}
+.kpi-name{font-size:13px;font-weight:700;color:var(--text-primary)}
+.kpi-formula{font-family:var(--font-mono);font-size:11px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 8px;color:var(--text-secondary);line-height:1.5}
+.kpi-row{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.kpi-row-label{color:var(--text-muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.kpi-target{color:var(--green);font-weight:600}
+.kpi-target.directional{color:var(--amber)}
+.kpi-result{color:var(--text-muted);font-style:italic}
+.kpi-goal{color:var(--accent);font-size:11px}
+.kpi-conclusion{background:var(--surface2);border-radius:var(--radius-sm);padding:8px 10px;font-size:11px;color:var(--text-muted);font-style:italic}
+.kpi-tags{display:flex;flex-wrap:wrap;gap:5px}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .sidebar{width:52px}
+  .sidebar-section,.nav-item span:last-child{display:none}
+  .nav-item{justify-content:center;padding:10px 0}
+  .nav-icon{margin:0}
+  .main{margin-left:52px}
+  .section-header{flex-direction:column;padding:18px 16px 14px}
+  .section-body{padding:18px 16px 40px}
+  .step-detail-grid,.goal-detail-grid,.std-goals-grid,.kpi-grid{grid-template-columns:1fr}
+  .step-detail-box.full{grid-column:1}
+  .top-meta{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="top-bar-left">
+    <div class="wordmark">BetOnline SB26</div>
+    <div class="top-meta">Find a Market for a Game &mdash; Player Journey / Sportsbook Product</div>
+  </div>
+  <div class="top-bar-right">
+    <span class="meta-badge">2026-Q2</span>
+    <span class="meta-badge">Updated 2026-05-03</span>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">Documents</div>
+  <div class="nav-item active" onclick="switchPage('journey',this)">
+    <span class="nav-icon">&#128205;</span><span>Journey Map</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('goals',this)">
+    <span class="nav-icon">&#127919;</span><span>Business Goals</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('kpis',this)">
+    <span class="nav-icon">&#128202;</span><span>KPI Tracker</span>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ══════════════════════════════════ JOURNEY MAP PAGE -->
+<div id="page-journey" class="page active">
+  <div class="section-header">
+    <div class="section-header-left">
+      <h1>Player Journey Map</h1>
+      <div class="subtitle">Find a Market for a Game &mdash; post Aux Tag Market Grouping launch</div>
+      <div class="meta-tags">
+        <span class="badge badge-muted">Sportsbook</span>
+        <span class="badge badge-muted">9 Steps</span>
+        <span class="badge badge-muted">5 Stages</span>
+        <span class="badge badge-amber">Branch at Step 4</span>
+      </div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="switchView('journey','table',this)">Table</button>
+      <button class="view-btn" onclick="switchView('journey','interactive',this)">Interactive</button>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <!-- TABLE VIEW -->
+    <div id="journey-table" class="view-panel active">
+
+      <div class="table-wrap">
+        <div class="table-title">Lifecycle Stages</div>
+        <table class="data-table">
+          <tr><th>Stage</th><th>Question</th><th>Description</th></tr>
+          <tr><td><strong>Awareness</strong></td><td>How does a punter arrive with a specific game in mind?</td><td>User arrives at BetOnline having already decided they want to bet on a specific game.</td></tr>
+          <tr><td><strong>Engage</strong></td><td>How do we move them from sports home to the right game?</td><td>User navigates through left nav and league page to locate the game row.</td></tr>
+          <tr><td><strong>Convert</strong></td><td>How do we get them from game identified to bet placed?</td><td>User picks their path (event row or FSP), finds the market group, selects a price, and places the bet.</td></tr>
+          <tr><td><strong>Excite</strong></td><td>How do we deliver a confident bet placement moment?</td><td>Bet is placed and confirmed quickly. User feels confident the right line was captured.</td></tr>
+          <tr><td><strong>Ascend</strong></td><td>How do we extend engagement beyond the first bet?</td><td>User explores adjacent market groups in the FSP, builds a parlay, or considers SGP.</td></tr>
+          <tr><td>Subscribe / Advocate / Promote</td><td>&mdash;</td><td>Not in scope for this journey.</td></tr>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-title">Steps by Stage</div>
+        <table class="data-table">
+          <tr><th>#</th><th>Step</th><th>Stage</th><th>Persona</th><th>Touchpoint</th><th>Pain Points</th><th>Opportunities</th></tr>
+          <tr><td>1</td><td><strong>Land on Sports Home</strong></td><td><span class="badge badge-accent">Awareness</span></td><td>Recreational Punter, Casual New User</td><td>Sports Home</td><td><ul><li>Homepage is promotion-heavy; sport nav not above the fold on all viewports</li><li>No recently viewed league shortcut</li><li>Live and Pre-match are separate top-level sections</li></ul></td><td><ul><li>Recently viewed league shortcut</li><li>Live game ticker for previously visited sports</li></ul></td></tr>
+          <tr><td>2</td><td><strong>Locate League in Left Nav</strong></td><td><span class="badge badge-teal">Engage</span></td><td>Recreational Punter, Sharp</td><td>Left Nav</td><td><ul><li>Same league appears under multiple product nodes</li><li>No live game count badge on league rows</li><li>Sharps prefer direct URL or search</li></ul></td><td><ul><li>Live game count badge per league row</li><li>Consolidate duplicate league entries</li></ul></td></tr>
+          <tr><td>3</td><td><strong>Scan League Page, Identify Game Row</strong></td><td><span class="badge badge-teal">Engage</span></td><td>Recreational Punter, Sharp</td><td>League Page &mdash; Event Row</td><td><ul><li>Group bands add ~30px per row; viewport drops from ~10 to 7-8 events on desktop</li><li>Mobile hit harder</li><li>Band labels (e.g., "Aces Markets") unfamiliar to casual users</li></ul></td><td><ul><li>Suppress band header when only one group exists (planned mitigation)</li><li>Sticky game search on league page</li></ul></td></tr>
+          <tr><td>4</td><td><strong>Decide: Event Row vs FSP</strong> <span class="badge badge-amber">Branch</span></td><td><span class="badge badge-amber">Convert</span></td><td>Recreational Punter (row), Sharp (FSP)</td><td>Event Row / FSP entry</td><td><ul><li>No clear visual cue separating "tap price" from "tap title to enter FSP"</li><li>Event row shows only top price per group column</li></ul></td><td><ul><li>Market count indicator on event row</li><li>First-time FSP entry tooltip</li></ul></td></tr>
+          <tr><td>5</td><td><strong>Scan Group Tabs (FSP)</strong></td><td><span class="badge badge-amber">Convert</span></td><td>Recreational Punter, Sharp</td><td>FSP Tab Bar</td><td><ul><li>Aux Tag group names unfamiliar to casual users</li><li>Tab bar overflows on sports with many groups</li><li>No market count per tab before tapping</li></ul></td><td><ul><li>Market count badge per tab</li><li>Default to Main Lines; remember last-used tab per sport</li></ul></td></tr>
+          <tr><td>6</td><td><strong>Find Specific Market and Price</strong></td><td><span class="badge badge-amber">Convert</span></td><td>Recreational Punter, Sharp</td><td>FSP Market List</td><td><ul><li>No consistent sort order within a group</li><li>No price movement indicator</li></ul></td><td><ul><li>Sort markets by popularity within group</li><li>Price movement indicator on price buttons</li></ul></td></tr>
+          <tr><td>7</td><td><strong>Tap Price and Open Betslip</strong></td><td><span class="badge badge-amber">Convert</span></td><td>Recreational Punter, Sharp</td><td>Price Button &rarr; Betslip</td><td><ul><li>Betslip slow to reflect on high-frequency odds updates</li><li>Betslip overlay obscures FSP market list on mobile</li></ul></td><td><ul><li>Persist FSP behind betslip overlay on mobile</li><li>Quick-stake presets on first betslip open</li></ul></td></tr>
+          <tr><td>8</td><td><strong>Confirm Stake and Place Bet</strong></td><td><span class="badge badge-green">Excite</span></td><td>Recreational Punter, Sharp</td><td>Betslip</td><td><ul><li>Bet rejection due to line movement breaks mid-confirmation flow</li><li>Stake input obscured by keyboard on mobile</li></ul></td><td><ul><li>One-time accept-odds preference prompt</li><li>Improved keyboard handling for stake input</li></ul></td></tr>
+          <tr><td>9</td><td><strong>Explore Adjacent Groups</strong></td><td><span class="badge badge-purple">Ascend</span></td><td>Recreational Punter, Sharp</td><td>FSP Tab Bar &mdash; adjacent tabs</td><td><ul><li>No cross-sell prompt post-bet pointing to adjacent groups</li><li>SGP not surfaced as tab or CTA in FSP</li></ul></td><td><ul><li>SGP as pinned tab or persistent CTA</li><li>Odds Booster badge on relevant market rows</li></ul></td></tr>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-title">Touchpoints by Stage</div>
+        <table class="data-table">
+          <tr><th>Stage</th><th>Touchpoints</th></tr>
+          <tr><td><strong>Awareness</strong></td><td>Sports Home</td></tr>
+          <tr><td><strong>Engage</strong></td><td>Sports Home, Left Nav (sport tree), League Page event rows, Group Band labels</td></tr>
+          <tr><td><strong>Convert</strong></td><td>Event row price buttons (quick path), FSP tab bar, FSP market list, Price button, Betslip</td></tr>
+          <tr><td><strong>Excite</strong></td><td>Betslip confirmation</td></tr>
+          <tr><td><strong>Ascend</strong></td><td>FSP adjacent group tabs, SGP CTA, Odds Booster badge</td></tr>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-title">Octalysis Core Drives by Step</div>
+        <table class="data-table">
+          <tr><th>Step</th><th>Core Drives</th></tr>
+          <tr><td>Land on Sports Home</td><td>CD2 Development &amp; Accomplishment &mdash; motivated to find the bet quickly; CD6 Scarcity &amp; Impatience &mdash; game may be starting soon</td></tr>
+          <tr><td>Locate League in Left Nav</td><td>CD2 Development &amp; Accomplishment; CD6 Scarcity &amp; Impatience</td></tr>
+          <tr><td>Scan League Page</td><td>CD7 Unpredictability &amp; Curiosity &mdash; curious what market types are available per game</td></tr>
+          <tr><td>Decide Event Row vs FSP</td><td>CD8 Loss &amp; Avoidance &mdash; worried about missing a better price; CD7 Unpredictability &amp; Curiosity</td></tr>
+          <tr><td>Scan Group Tabs (FSP)</td><td>CD3 Empowerment of Creativity &mdash; building bet strategy across groups; CD7 Unpredictability &amp; Curiosity</td></tr>
+          <tr><td>Find Market in Group</td><td>CD4 Ownership &amp; Possession &mdash; finding and claiming their pick; CD2 Development &amp; Accomplishment</td></tr>
+          <tr><td>Tap Price to Betslip</td><td>CD6 Scarcity &amp; Impatience &mdash; wants to lock in before the line moves; CD8 Loss &amp; Avoidance</td></tr>
+          <tr><td>Confirm and Place Bet</td><td>CD7 Unpredictability &amp; Curiosity &mdash; anticipation of the outcome; CD4 Ownership &amp; Possession</td></tr>
+          <tr><td>Explore Adjacent Groups</td><td>CD7 Unpredictability &amp; Curiosity &mdash; curious about other groups; CD3 Empowerment of Creativity</td></tr>
+        </table>
+      </div>
+
+    </div><!-- end journey-table -->
+
+    <!-- INTERACTIVE VIEW -->
+    <div id="journey-interactive" class="view-panel">
+      <div class="stage-filters">
+        <div class="stage-tab active" onclick="filterStage('all',this)">All Steps</div>
+        <div class="stage-tab" onclick="filterStage('awareness',this)">Awareness</div>
+        <div class="stage-tab" onclick="filterStage('engage',this)">Engage</div>
+        <div class="stage-tab" onclick="filterStage('convert',this)">Convert</div>
+        <div class="stage-tab" onclick="filterStage('excite',this)">Excite</div>
+        <div class="stage-tab" onclick="filterStage('ascend',this)">Ascend</div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-card" data-stage="awareness">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">1</div>
+          <div class="step-header-mid">
+            <div class="step-title">Land on Sports Home</div>
+            <div class="step-meta">Recreational Punter, Casual New User &nbsp;&middot;&nbsp; Sports Home</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-accent">Awareness</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">User arrives at BetOnline Sports Home having already decided they want to bet on a specific game. They scan the page for a path to that sport or league.</div>
+          <div class="step-emotion">Purposeful, neutral &mdash; they have a specific game in mind</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box">
+              <div class="step-detail-label" style="background:var(--surface2);color:var(--text-muted)">Goals</div>
+              <div class="step-detail-content"><div class="goals-row"><div class="goal-mini"><div class="gl">Player</div><p>Find the fastest path to their target game</p></div><div class="goal-mini"><div class="gl">Business</div><p>Minimise time to first navigation action</p></div></div></div>
+            </div>
+            <div class="step-detail-box">
+              <div class="step-detail-label" style="background:var(--surface2);color:var(--text-muted)">Success Criteria</div>
+              <div class="step-detail-content">User identifies the correct sport/league path within 10 seconds</div>
+            </div>
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Homepage is promotion-heavy; sport navigation is not above the fold on all viewports</li><li>No "recently viewed" league or game shortcut</li><li>Live and Pre-match are separate top-level sections, not immediately obvious which to enter</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Recently viewed league shortcut on sports home</li><li>Live game ticker for sports the user has bet on before</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>"Continue where you left off" widget showing last visited league</li><li>Sport quick-links above the fold</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD2: Development &amp; Accomplishment &mdash; motivated to find the bet quickly</li><li>CD6: Scarcity &amp; Impatience &mdash; game may be starting soon</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>sports_home_viewed</em>, <em>first_navigation_click</em>, <em>session_start_source</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card" data-stage="engage">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">2</div>
+          <div class="step-header-mid">
+            <div class="step-title">Locate League in Left Nav</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; Left Nav</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-teal">Engage</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">User opens the left nav and expands the sport tree to find their target league. They look for a single, unambiguous entry point to the league page.</div>
+          <div class="step-emotion">Mild friction if sport tree is long or league has duplicate entries</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box">
+              <div class="step-detail-label" style="background:var(--surface2);color:var(--text-muted)">Goals</div>
+              <div class="step-detail-content"><div class="goals-row"><div class="goal-mini"><div class="gl">Player</div><p>Reach the league page in one click from the nav</p></div><div class="goal-mini"><div class="gl">Business</div><p>Reduce drop-off between intent and league page arrival</p></div></div></div>
+            </div>
+            <div class="step-detail-box">
+              <div class="step-detail-label" style="background:var(--surface2);color:var(--text-muted)">Success Criteria</div>
+              <div class="step-detail-content">User reaches the correct league page within 2 taps of opening the nav</div>
+            </div>
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Same league appears under multiple product nodes (Pre-match, Live)</li><li>No badge showing live game count or pre-match count on league rows</li><li>Sharps prefer direct URL or search &mdash; tree nav feels slow</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Live game count badge on each league row</li><li>Consolidate duplicate league entries into a single hub entry</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>"Now Live" dot next to league names with active games</li><li>Pinned search bar at top of left nav</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD2: Development &amp; Accomplishment &mdash; making progress toward the bet</li><li>CD6: Scarcity &amp; Impatience &mdash; game kick-off approaching</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>left_nav_sport_expanded</em>, <em>left_nav_league_clicked</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card" data-stage="engage">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">3</div>
+          <div class="step-header-mid">
+            <div class="step-title">Scan League Page, Identify Game Row</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; League Page &mdash; Event Row</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-teal">Engage</span><span class="badge badge-amber">Critical Branch</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">User lands on the league page and scans the event list. With market grouping shipped, each row shows labeled group bands (Main Lines, {Aux Tag} Markets, {Period}) above the price columns. Viewport now shows 7-8 events instead of ~10 on desktop due to the additional band height.</div>
+          <div class="step-emotion">Scanning &mdash; looking for their game; mildly aware of more visual weight per row</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box">
+              <div class="step-detail-label" style="background:var(--surface2);color:var(--text-muted)">Goals</div>
+              <div class="step-detail-content"><div class="goals-row"><div class="goal-mini"><div class="gl">Player</div><p>Spot their target game quickly and see what market types are available</p></div><div class="goal-mini"><div class="gl">Business</div><p>Surface market depth at a glance; reduce FSP entry for simple bets</p></div></div></div>
+            </div>
+            <div class="step-detail-box">
+              <div class="step-detail-label" style="background:var(--surface2);color:var(--text-muted)">Success Criteria</div>
+              <div class="step-detail-content">User locates their game within 3 seconds of the league page loading</div>
+            </div>
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Group bands add ~30px per event row; viewport drops from ~10 to ~7-8 events on desktop</li><li>Mobile is hit harder &mdash; fewer events visible without scrolling</li><li>Band labels such as "Aces Markets" or "1st Set" are unfamiliar to casual users</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Suppress the band header when only one group exists (mitigation already planned)</li><li>Sticky game search or filter on the league page</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>Compact band mode toggle for power users</li><li>Inline game search bar at top of league page</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD7: Unpredictability &amp; Curiosity &mdash; curious what market types are available per game</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>league_page_viewed</em>, <em>event_row_scroll_depth</em>; events-per-viewport measurement pre vs post grouping launch</li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card" data-stage="convert">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">4</div>
+          <div class="step-header-mid">
+            <div class="step-title">Decide: Event Row vs FSP</div>
+            <div class="step-meta">Recreational Punter (row), Sharp (FSP) &nbsp;&middot;&nbsp; Event Row / FSP entry</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-amber">Convert</span><span class="badge badge-amber">Branch</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">User sees group bands on the event row. If their market is visible in Main Lines or a top band, they can click the price directly from the row. If they need a deeper market, they tap the event title to enter the FSP.</div>
+          <div class="step-emotion">Recreational user taps a price directly; sharp or depth-seeker enters the FSP</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>No clear visual distinction between "tap price to bet" and "tap event title to go to FSP"</li><li>Users wanting deep markets may not discover the FSP without accidentally navigating to it</li><li>Event row shows only top price columns per group</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Market count indicator on each event row ("32 markets in 5 groups")</li><li>First-time tooltip explaining the FSP on first entry</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>"N markets in X groups" count on every event row</li><li>Onboarding tooltip: "Tap the event to explore all market groups"</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD8: Loss &amp; Avoidance &mdash; worried they are missing a better price in a deeper group</li><li>CD7: Unpredictability &amp; Curiosity &mdash; interested to see what groups exist</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>event_row_price_clicked</em>, <em>fsp_opened_from_league_page</em>, <em>fsp_open_rate</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-card" data-stage="convert">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">5</div>
+          <div class="step-header-mid">
+            <div class="step-title">Scan Group Tabs to Find Market Category</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; FSP Tab Bar</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-amber">Convert</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">Inside the FSP, group tabs match the bands from the event row (Main Lines, {Aux Tag} Markets, {Period}, {Period} {Aux Tag}). User scans tabs to find the category containing the market they want.</div>
+          <div class="step-emotion">Oriented if group names match mental model; confused if labels are unfamiliar</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Aux Tag group names (e.g., "Aces Markets", "Corners Markets") are unfamiliar to casual users</li><li>Tab bar overflows on sports with many groups &mdash; requires horizontal scroll to see all tabs</li><li>No indication of how many markets are inside each tab before tapping</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Market count badge per tab (e.g., "Games Markets 4")</li><li>Consistent naming convention aligned to how bettors describe market types</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>Market count inside each tab chip</li><li>Default to Main Lines; remember last-used tab per sport</li><li>Tooltip on long-press showing example markets in each group</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD3: Empowerment of Creativity &mdash; building their bet strategy across groups</li><li>CD7: Unpredictability &amp; Curiosity &mdash; curious what each group contains</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>fsp_tab_viewed</em>, <em>fsp_tab_switched</em>, <em>fsp_tab_name</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-card" data-stage="convert">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">6</div>
+          <div class="step-header-mid">
+            <div class="step-title">Find Specific Market and Price</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; FSP Market List (within group tab)</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-amber">Convert</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">Inside the selected group tab, user sees a flat list of markets and prices. They scan for the specific line they want (e.g., "Games Total Over 22.5") and evaluate the price before tapping.</div>
+          <div class="step-emotion">Engaged, evaluating odds</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Markets within a group have no consistent priority sort order</li><li>No price movement indicator (direction of recent line change)</li><li>Comparing multiple outcomes requires scrolling back and forth within the group</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Sort markets within each group by popularity or default display order</li><li>Price movement indicator (directional arrow or colour delta) on each price button</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>Pinned "featured" market at top of each group tab</li><li>Line movement arrows on price buttons</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD4: Ownership &amp; Possession &mdash; finding and claiming their pick</li><li>CD2: Development &amp; Accomplishment &mdash; feeling like a sharp bettor finding value</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>market_viewed</em>, <em>market_group_scroll_depth</em>, <em>price_button_hovered</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step-card" data-stage="convert">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">7</div>
+          <div class="step-header-mid">
+            <div class="step-title">Tap Price and Open Betslip</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; Price Button &rarr; Betslip</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-amber">Convert</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">User taps a price button (either from the event row or inside an FSP group tab). The selection is added to the betslip. User reviews the selection and prepares to enter a stake.</div>
+          <div class="step-emotion">Decisive &mdash; wants the selection confirmed before the line moves</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Betslip can be slow to reflect selection when odds are updating at high frequency</li><li>On mobile, betslip overlay partially obscures the FSP market list, making it hard to add a second pick</li><li>Parlay combining pre-match and live is not supported</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Persist the FSP behind the betslip overlay on mobile</li><li>Quick-stake preset buttons on first betslip open</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>"Add another from this game" shortcut on the betslip</li><li>Quick-stake presets: $10 / $25 / $50 / $100</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD6: Scarcity &amp; Impatience &mdash; wants to lock in before the line moves</li><li>CD8: Loss &amp; Avoidance &mdash; anxious about price changing before confirmation</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>price_button_clicked</em>, <em>betslip_opened</em>, <em>selection_added_to_betslip</em>, <em>time_price_click_to_betslip_open</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8 -->
+      <div class="step-card" data-stage="excite">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">8</div>
+          <div class="step-header-mid">
+            <div class="step-title">Confirm Stake and Place Bet</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; Betslip</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-green">Excite</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">User enters a stake and taps Confirm. Bet is submitted. Success state confirms selection, odds, stake, and potential return.</div>
+          <div class="step-emotion">Anticipation mixed with mild anxiety about bet acceptance</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>Bet rejection due to line movement breaks the flow mid-confirmation</li><li>Stake input on mobile is obscured by the keyboard</li><li>No accept-any-odds default for users who want fast placement without interruptions</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>One-time prompt to set accept-odds preference (any / same-or-better / exact)</li><li>Improved keyboard handling for stake input on mobile</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>One-tap "accept odds change" inline confirmation instead of full re-flow</li><li>Bet and Watch &mdash; stream opens automatically post-placement if available</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD7: Unpredictability &amp; Curiosity &mdash; anticipation of the outcome</li><li>CD4: Ownership &amp; Possession &mdash; the bet is now theirs</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>bet_placed</em>, <em>bet_rejected</em>, <em>bet_acceptance_rate</em>, <em>time_betslip_open_to_placed</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 9 -->
+      <div class="step-card" data-stage="ascend">
+        <div class="step-header" onclick="toggleStep(this.parentElement)">
+          <div class="step-num">9</div>
+          <div class="step-header-mid">
+            <div class="step-title">Explore Adjacent Groups</div>
+            <div class="step-meta">Recreational Punter, Sharp &nbsp;&middot;&nbsp; FSP Tab Bar &mdash; adjacent group tabs</div>
+          </div>
+          <div class="step-badges"><span class="badge badge-purple">Ascend</span></div>
+          <div class="step-chevron">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <div class="step-description">After placing a bet, user stays in the FSP and browses adjacent group tabs. The grouped tab structure makes cross-sell natural &mdash; switching from Main Lines to a period group or aux tag group requires one tap.</div>
+          <div class="step-emotion">Curious and opportunistic after the first bet is placed</div>
+          <div class="step-detail-grid">
+            <div class="step-detail-box pain">
+              <div class="step-detail-label">Pain Points</div>
+              <div class="step-detail-content"><ul><li>No explicit cross-sell prompt after bet placed pointing to adjacent groups</li><li>SGP availability is not surfaced as a tab or CTA within the FSP</li><li>No "fans also bet" or recommended markets widget within the event</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Opportunities</div>
+              <div class="step-detail-content"><ul><li>Highlight SGP as a pinned tab or persistent CTA in the FSP</li><li>Odds Booster badge on relevant market rows within group tabs</li></ul></div>
+            </div>
+            <div class="step-detail-box ideas">
+              <div class="step-detail-label">Ideas</div>
+              <div class="step-detail-content"><ul><li>"Build a Same Game Parlay" CTA shown after first selection</li><li>Odds Booster badge on boosted market rows</li><li>"Popular in this game" widget showing top-bet markets across all groups</li></ul></div>
+            </div>
+            <div class="step-detail-box octalysis">
+              <div class="step-detail-label">Octalysis Drives</div>
+              <div class="step-detail-content"><ul><li>CD7: Unpredictability &amp; Curiosity &mdash; curious about other groups</li><li>CD3: Empowerment of Creativity &mdash; building a multi</li></ul></div>
+            </div>
+            <div class="step-detail-box data full">
+              <div class="step-detail-label">Data Sources</div>
+              <div class="step-detail-content"><ul><li>Mixpanel: <em>fsp_tab_switched_post_bet</em>, <em>sgp_cta_clicked</em>, <em>additional_selection_added</em></li></ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end journey-interactive -->
+  </div>
+</div><!-- end page-journey -->
+
+
+<!-- ══════════════════════════════════ BUSINESS GOALS PAGE -->
+<div id="page-goals" class="page">
+  <div class="section-header">
+    <div class="section-header-left">
+      <h1>Business Goals</h1>
+      <div class="subtitle">Find a Market for a Game &mdash; strategic goals tied to this journey</div>
+      <div class="meta-tags">
+        <span class="badge badge-muted">Sportsbook / Product</span>
+        <span class="badge badge-muted">2026-Q2</span>
+        <span class="badge badge-muted">4 Goals</span>
+      </div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="switchView('goals','table',this)">Table</button>
+      <button class="view-btn" onclick="switchView('goals','interactive',this)">Interactive</button>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <!-- TABLE VIEW -->
+    <div id="goals-table" class="view-panel active">
+      <div class="table-wrap">
+        <div class="table-title">Business Goals</div>
+        <table class="data-table">
+          <tr><th>Goal</th><th>Description</th><th>Measurement</th><th>Score</th><th>Recommendations</th></tr>
+          <tr>
+            <td><strong>Reduce time to bet</strong></td>
+            <td>Users arriving with clear betting intent should find a line and place a bet faster after the grouping change improves market scannability.</td>
+            <td><ul><li>Median and p90 time from sports home to first betslip add</li><li>Homepage to bet placed conversion rate</li><li>League page to bet placed conversion rate</li></ul><br><em>Confirmation: Median time to first betslip add decreases post-grouping launch vs pre-launch baseline.</em></td>
+            <td><span class="badge badge-accent">Opportunity Identified</span></td>
+            <td>Suppress band when only one group exists. Add market count on event row. Quick-stake presets on betslip.</td>
+          </tr>
+          <tr>
+            <td><strong>Increase market discovery depth</strong></td>
+            <td>Grouped tabs in the FSP expose more market categories per session and should increase markets viewed before bet placement.</td>
+            <td><ul><li>Markets viewed per session</li><li>FSP tab switches per FSP session</li><li>Group band clickthrough rate per sport</li></ul><br><em>Confirmation: Higher average markets viewed per session post-launch and more FSP tab switches per visit.</em></td>
+            <td><span class="badge badge-green">Strong Upside</span></td>
+            <td>Add market count badge per FSP tab. Default to Main Lines then surface most-popular group second. Add SGP CTA after first selection.</td>
+          </tr>
+          <tr>
+            <td><strong>Maintain offering density</strong></td>
+            <td>Group bands add visual height per event row. Keeping events-per-viewport close to the pre-launch baseline is necessary to avoid degrading the league page browsing experience.</td>
+            <td><ul><li>Events visible per viewport on league page (desktop and mobile)</li><li>League page scroll depth before game row tap</li><li>Bounce rate from league page</li></ul><br><em>Confirmation: Events-per-viewport stays within 15% of pre-launch baseline; no increase in league page bounce rate.</em></td>
+            <td><span class="badge badge-amber">Needs Improvement</span></td>
+            <td>Ship band suppression when only one group is present. Explore compact band mode. Monitor mobile viewport density separately from desktop.</td>
+          </tr>
+          <tr>
+            <td><strong>Lift FSP engagement</strong></td>
+            <td>The grouped tab structure should make the FSP more useful and increase the share of sessions that use it.</td>
+            <td><ul><li>FSP open rate from event row</li><li>Tab switches per FSP session</li><li>Bet placement rate from FSP vs event row</li></ul><br><em>Confirmation: FSP open rate increases and tab switches per FSP session increases post-launch.</em></td>
+            <td><span class="badge badge-accent">Opportunity Identified</span></td>
+            <td>Add market count per tab. Remember last-used tab per sport. Surface SGP as a tab in the FSP. Add Odds Booster badge on relevant market rows.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-title">Standard Business Goals for BetOnline Initiatives</div>
+        <table class="data-table">
+          <tr><th>Business Goal</th><th>Strategic Sub-Goal</th></tr>
+          <tr><td><strong>Build a habit of returning to the site</strong></td><td>Increase player retention and weekly active users</td></tr>
+          <tr><td><strong>Encourage players to reinvest cash received</strong></td><td>Drive more gameplay, bets, and overall turnover</td></tr>
+          <tr><td><strong>Build positive emotions and brand attachment</strong></td><td>Enhance loyalty, NPS, and brand advocacy</td></tr>
+          <tr><td><strong>Players encouraged to climb VIP status</strong></td><td>Increase long-term player value and loyalty</td></tr>
+          <tr><td><strong>Unified League Hub adoption</strong></td><td>Become preferred destination for league-based bettors</td></tr>
+        </table>
+      </div>
+
+      <div class="notes-block">
+        <div class="notes-label">Notes</div>
+        <ul>
+          <li>Users think about markets by type (Main Lines, Corners, Sets) rather than by product silo. Grouped tabs align better with this mental model.</li>
+          <li>The viewport density trade-off is the most significant risk of the grouping change. Measure on desktop and mobile separately.</li>
+          <li>Recommend a pre/post measurement window of 14 days each around the grouping launch date.</li>
+          <li>Segment all metrics by sport: tennis and soccer show the most group diversity and are likely to show the strongest signal.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE VIEW -->
+    <div id="goals-interactive" class="view-panel">
+
+      <div class="goal-card open">
+        <div class="goal-header" onclick="toggleGoal(this.parentElement)">
+          <div class="goal-header-left">
+            <div class="goal-title">Reduce time to bet</div>
+            <div class="goal-subtitle">Users arriving with clear betting intent should find a line and place a bet faster after the grouping change improves market scannability.</div>
+          </div>
+          <div class="goal-header-right"><span class="badge badge-accent">Opportunity Identified</span><span style="color:var(--text-muted);font-size:12px">&#9660;</span></div>
+        </div>
+        <div class="goal-body">
+          <div class="goal-detail-grid">
+            <div class="step-detail-box data">
+              <div class="step-detail-label">Measurement</div>
+              <div class="step-detail-content"><ul><li>Median and p90 time from sports home to first betslip add</li><li>Homepage to bet placed conversion rate</li><li>League page to bet placed conversion rate</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Recommendations</div>
+              <div class="step-detail-content"><ul><li>Suppress band when only one group exists</li><li>Add market count on event row so users can decide event row vs FSP faster</li><li>Quick-stake presets on betslip</li></ul></div>
+            </div>
+          </div>
+          <div class="confirmation-row"><strong>Confirmation:</strong> Median time to first betslip add decreases post-grouping launch vs pre-launch baseline.</div>
+        </div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-header" onclick="toggleGoal(this.parentElement)">
+          <div class="goal-header-left">
+            <div class="goal-title">Increase market discovery depth</div>
+            <div class="goal-subtitle">Grouped tabs in the FSP expose more market categories per session and should increase markets viewed before bet placement.</div>
+          </div>
+          <div class="goal-header-right"><span class="badge badge-green">Strong Upside</span><span style="color:var(--text-muted);font-size:12px">&#9660;</span></div>
+        </div>
+        <div class="goal-body">
+          <div class="goal-detail-grid">
+            <div class="step-detail-box data">
+              <div class="step-detail-label">Measurement</div>
+              <div class="step-detail-content"><ul><li>Markets viewed per session</li><li>FSP tab switches per FSP session</li><li>Group band clickthrough rate per sport</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Recommendations</div>
+              <div class="step-detail-content"><ul><li>Add market count badge per FSP tab</li><li>Default to Main Lines then surface most-popular group second</li><li>Add SGP CTA after first selection</li></ul></div>
+            </div>
+          </div>
+          <div class="confirmation-row"><strong>Confirmation:</strong> Higher average markets viewed per session post-launch and more FSP tab switches per visit.</div>
+        </div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-header" onclick="toggleGoal(this.parentElement)">
+          <div class="goal-header-left">
+            <div class="goal-title">Maintain offering density</div>
+            <div class="goal-subtitle">Group bands add visual height per event row. Keeping events-per-viewport close to the pre-launch baseline is necessary to avoid degrading the league page browsing experience.</div>
+          </div>
+          <div class="goal-header-right"><span class="badge badge-amber">Needs Improvement</span><span style="color:var(--text-muted);font-size:12px">&#9660;</span></div>
+        </div>
+        <div class="goal-body">
+          <div class="goal-detail-grid">
+            <div class="step-detail-box data">
+              <div class="step-detail-label">Measurement</div>
+              <div class="step-detail-content"><ul><li>Events visible per viewport on league page (desktop and mobile)</li><li>League page scroll depth before game row tap</li><li>Bounce rate from league page</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Recommendations</div>
+              <div class="step-detail-content"><ul><li>Ship band suppression when only one group is present</li><li>Explore compact band mode</li><li>Monitor mobile viewport density separately from desktop</li></ul></div>
+            </div>
+          </div>
+          <div class="confirmation-row"><strong>Confirmation:</strong> Events-per-viewport stays within 15% of pre-launch baseline; no increase in league page bounce rate.</div>
+        </div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-header" onclick="toggleGoal(this.parentElement)">
+          <div class="goal-header-left">
+            <div class="goal-title">Lift FSP engagement</div>
+            <div class="goal-subtitle">The grouped tab structure should make the FSP more useful and increase the share of sessions that use it.</div>
+          </div>
+          <div class="goal-header-right"><span class="badge badge-accent">Opportunity Identified</span><span style="color:var(--text-muted);font-size:12px">&#9660;</span></div>
+        </div>
+        <div class="goal-body">
+          <div class="goal-detail-grid">
+            <div class="step-detail-box data">
+              <div class="step-detail-label">Measurement</div>
+              <div class="step-detail-content"><ul><li>FSP open rate from event row</li><li>Tab switches per FSP session</li><li>Bet placement rate from FSP vs event row</li></ul></div>
+            </div>
+            <div class="step-detail-box opportunity">
+              <div class="step-detail-label">Recommendations</div>
+              <div class="step-detail-content"><ul><li>Add market count per tab</li><li>Remember last-used tab per sport</li><li>Surface SGP as a tab in the FSP</li><li>Add Odds Booster badge on relevant market rows</li></ul></div>
+            </div>
+          </div>
+          <div class="confirmation-row"><strong>Confirmation:</strong> FSP open rate increases and tab switches per FSP session increases post-launch.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px">
+        <div class="table-title" style="margin-bottom:8px">Standard Goals for BetOnline Initiatives</div>
+        <div class="std-goals-grid">
+          <div class="std-goal-cell"><div class="std-goal-title">Build a habit of returning to the site</div><div class="std-goal-sub">Increase player retention and weekly active users</div></div>
+          <div class="std-goal-cell"><div class="std-goal-title">Encourage players to reinvest cash received</div><div class="std-goal-sub">Drive more gameplay, bets, and overall turnover</div></div>
+          <div class="std-goal-cell"><div class="std-goal-title">Build positive emotions and brand attachment</div><div class="std-goal-sub">Enhance loyalty, NPS, and brand advocacy</div></div>
+          <div class="std-goal-cell"><div class="std-goal-title">Players encouraged to climb VIP status</div><div class="std-goal-sub">Increase long-term player value and loyalty</div></div>
+          <div class="std-goal-cell"><div class="std-goal-title">Unified League Hub adoption</div><div class="std-goal-sub">Become preferred destination for league-based bettors</div></div>
+          <div class="std-goal-cell"><div class="std-goal-title">FSP as a discovery surface</div><div class="std-goal-sub">Make FSP the go-to for deep market exploration, not just bet placement</div></div>
+        </div>
+      </div>
+
+      <div class="notes-block">
+        <div class="notes-label">Notes</div>
+        <ul>
+          <li>Users think about markets by type (Main Lines, Corners, Sets) rather than by product silo. Grouped tabs align better with this mental model.</li>
+          <li>The viewport density trade-off is the most significant risk of the grouping change. Measure on desktop and mobile separately.</li>
+          <li>Recommend a pre/post measurement window of 14 days each around the grouping launch date.</li>
+          <li>Segment all metrics by sport: tennis and soccer show the most group diversity and are likely to show the strongest signal.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end page-goals -->
+
+
+<!-- ══════════════════════════════════ KPI TRACKER PAGE -->
+<div id="page-kpis" class="page">
+  <div class="section-header">
+    <div class="section-header-left">
+      <h1>KPI Tracker</h1>
+      <div class="subtitle">Find a Market for a Game &mdash; post Aux Tag Market Grouping launch</div>
+      <div class="meta-tags">
+        <span class="badge badge-muted">Product / BI</span>
+        <span class="badge badge-muted">2026-Q2</span>
+        <span class="badge badge-muted">8 KPIs</span>
+      </div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="switchView('kpis','table',this)">Table</button>
+      <button class="view-btn" onclick="switchView('kpis','interactive',this)">Interactive</button>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <!-- TABLE VIEW -->
+    <div id="kpis-table" class="view-panel active">
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>KPI</th><th>Who Tracking</th><th>Where</th><th>Formula</th><th>Target</th><th>Result</th><th>Conclusions</th><th>Goal</th></tr>
+          <tr><td><strong>Time to First Betslip Add (Median)</strong></td><td>Product / BI</td><td>Mixpanel</td><td>Median time from <em>sports_home_viewed</em> to <em>selection_added_to_betslip</em></td><td style="color:var(--green);font-weight:600">Under 90 sec</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Reduce time to bet</td></tr>
+          <tr><td><strong>Time to First Betslip Add (P90)</strong></td><td>Product / BI</td><td>Mixpanel</td><td>90th percentile of same funnel as above</td><td style="color:var(--green);font-weight:600">Under 3 min</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Reduce time to bet</td></tr>
+          <tr><td><strong>Markets Viewed Per Session</strong></td><td>Product / BI</td><td>Mixpanel</td><td>Count of <em>market_viewed</em> events per session</td><td style="color:var(--green);font-weight:600">+20% vs pre-launch</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Increase market discovery depth</td></tr>
+          <tr><td><strong>Events Visible Per Viewport</strong></td><td>Product / BI</td><td>Internal / Viewport Analytics</td><td>Average event rows rendered above fold on league page load, desktop and mobile separately</td><td style="color:var(--amber);font-weight:600">Within 15% of pre-launch baseline</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Maintain offering density</td></tr>
+          <tr><td><strong>FSP Open Rate from Event Row</strong></td><td>Product / BI</td><td>Mixpanel</td><td><em>fsp_opened</em> events / league page sessions with at least one event row viewed</td><td style="color:var(--green);font-weight:600">+10% vs pre-launch</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Lift FSP engagement</td></tr>
+          <tr><td><strong>Tab Switches Per FSP Session</strong></td><td>Product / BI</td><td>Mixpanel</td><td>Count of <em>fsp_tab_switched</em> per FSP session</td><td style="color:var(--green);font-weight:600">Average &gt; 1.5 tab switches per FSP visit</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Lift FSP engagement</td></tr>
+          <tr><td><strong>Group Band Clickthrough Rate by Sport</strong></td><td>Product / BI</td><td>Mixpanel</td><td><em>event_row_price_clicked</em> segmented by <em>group_band_name</em> and sport; clicks per band impression</td><td style="color:var(--amber);font-weight:600">Establish baseline; identify top band per sport</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Increase market discovery depth</td></tr>
+          <tr><td><strong>Bet Placement Rate: Grouped vs Ungrouped</strong></td><td>Product / BI</td><td>Mixpanel / A-B framework</td><td>Bets placed / sessions that viewed event row, segmented by grouped vs control</td><td style="color:var(--green);font-weight:600">Grouped &gt;= ungrouped</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td style="color:var(--text-muted);font-style:italic">TBD</td><td>Reduce time to bet</td></tr>
+        </table>
+      </div>
+      <div class="notes-block">
+        <div class="notes-label">Notes</div>
+        <ul>
+          <li>All Result and Conclusion fields are TBD pending post-launch measurement.</li>
+          <li>Capture a 14-day pre-launch baseline before the grouping change ships.</li>
+          <li>Segment by sport (tennis and soccer show most group diversity), by device (desktop vs mobile), and by user type (Sharp vs Recreational where identifiable).</li>
+          <li>If A/B testing is not possible at launch, use a pre/post comparison with matched time windows (same days of week, same sporting calendar).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE VIEW -->
+    <div id="kpis-interactive" class="view-panel">
+      <div class="kpi-grid">
+
+        <div class="kpi-card">
+          <div class="kpi-name">Time to First Betslip Add (Median)</div>
+          <div class="kpi-formula">Median time: sports_home_viewed &rarr; selection_added_to_betslip</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target">Under 90 sec</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Reduce time to bet</span></div>
+          <div class="kpi-conclusion">Pending post-launch measurement</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">Time to First Betslip Add (P90)</div>
+          <div class="kpi-formula">90th percentile: sports_home_viewed &rarr; selection_added_to_betslip</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target">Under 3 min</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Reduce time to bet</span></div>
+          <div class="kpi-conclusion">Pending post-launch measurement</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">Markets Viewed Per Session</div>
+          <div class="kpi-formula">Count of market_viewed events per session</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target">+20% vs pre-launch</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Increase market discovery depth</span></div>
+          <div class="kpi-conclusion">Pending post-launch measurement</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">Events Visible Per Viewport</div>
+          <div class="kpi-formula">Avg event rows above fold on league page load (desktop + mobile separately)</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target directional">Within 15% of pre-launch baseline</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Maintain offering density</span></div>
+          <div class="kpi-conclusion">Key risk metric for the grouping change. Monitor closely at launch.</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Viewport Analytics</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">FSP Open Rate from Event Row</div>
+          <div class="kpi-formula">fsp_opened / sessions with at least one event row viewed</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target">+10% vs pre-launch</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Lift FSP engagement</span></div>
+          <div class="kpi-conclusion">Pending post-launch measurement</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">Tab Switches Per FSP Session</div>
+          <div class="kpi-formula">Count of fsp_tab_switched per FSP session</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target">Average &gt; 1.5 tab switches</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Lift FSP engagement</span></div>
+          <div class="kpi-conclusion">Pending post-launch measurement</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">Group Band Clickthrough Rate by Sport</div>
+          <div class="kpi-formula">event_row_price_clicked segmented by group_band_name + sport / band impressions</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target directional">Establish baseline; identify top band per sport</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Increase market discovery depth</span></div>
+          <div class="kpi-conclusion">Will reveal which group labels drive the most engagement per sport</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-name">Bet Placement Rate: Grouped vs Ungrouped</div>
+          <div class="kpi-formula">Bets placed / sessions that viewed event row, segmented grouped vs control</div>
+          <div class="kpi-row"><span class="kpi-row-label">Target</span><span class="kpi-target">Grouped &gt;= ungrouped</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Result</span><span class="kpi-result">TBD</span></div>
+          <div class="kpi-row"><span class="kpi-row-label">Goal</span><span class="kpi-goal">Reduce time to bet</span></div>
+          <div class="kpi-conclusion">Use A/B if available; otherwise pre/post with matched time windows</div>
+          <div class="kpi-tags"><span class="badge badge-muted">Product / BI</span><span class="badge badge-muted">Mixpanel / A-B</span></div>
+        </div>
+
+      </div>
+
+      <div class="notes-block" style="margin-top:24px">
+        <div class="notes-label">Notes</div>
+        <ul>
+          <li>All Result and Conclusion fields are TBD pending post-launch measurement.</li>
+          <li>Capture a 14-day pre-launch baseline before the grouping change ships.</li>
+          <li>Segment by sport (tennis and soccer show most group diversity), by device (desktop vs mobile), and by user type (Sharp vs Recreational where identifiable).</li>
+          <li>If A/B testing is not possible at launch, use a pre/post comparison with matched time windows (same days of week, same sporting calendar).</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div><!-- end page-kpis -->
+
+</main>
+
+<script>
+function switchPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+}
+function switchView(prefix, view, btn) {
+  var panel = btn.closest('.page');
+  panel.querySelectorAll('.view-panel').forEach(function(p){
+    p.classList.remove('active');
+  });
+  panel.querySelectorAll('.view-btn').forEach(function(b){
+    b.classList.remove('active');
+  });
+  document.getElementById(prefix + '-' + view).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleStep(card) {
+  card.classList.toggle('open');
+}
+function filterStage(stage, el) {
+  document.querySelectorAll('.stage-tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.step-card').forEach(function(c){
+    if (stage === 'all' || c.dataset.stage === stage) {
+      c.style.display = '';
+    } else {
+      c.style.display = 'none';
+    }
+  });
+}
+function toggleGoal(card) {
+  card.classList.toggle('open');
+  var body = card.querySelector('.goal-body');
+  body.style.display = card.classList.contains('open') ? 'block' : 'none';
+}
+// init goal bodies
+document.querySelectorAll('.goal-card').forEach(function(c){
+  var body = c.querySelector('.goal-body');
+  if (!c.classList.contains('open')) body.style.display = 'none';
+});
+</script>
+</body>
+</html>
